@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import NavBar from './src/screens/NavBar';
+import IdentifyPlant from './src/screens/IdentifyPlant';
+import PlantInfoCard from './src/screens/PlantInfoCard';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <NavBar/>
+      <IdentifyPlant/>
+      <PlantInfoCard/>
     </View>
   );
 }
