@@ -1,9 +1,16 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
+import ListOfPlants from "./ListOfPlants";
+import AddAPlant from "./AddAPlant";
+import { useState } from "react";
 
 export default function MyPlants() {
+    const [myPlantList, setMyPlantList] = useState([])
+
     return (
-        <View>
+        <ScrollView>
             <Text>MyPlants</Text>
-        </View>
+            <ListOfPlants myPlantList={myPlantList}/>
+            <AddAPlant setMyPlantList={setMyPlantList}/>
+        </ScrollView>
     )
 }
