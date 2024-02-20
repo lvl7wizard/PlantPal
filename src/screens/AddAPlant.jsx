@@ -1,8 +1,9 @@
 import { View, Text, TextInput, Button, StyleSheet, Modal } from "react-native";
-import { useState } from "react";
+import { useState, useContext} from "react";
+import { PlantContext } from "../Contexts/PlantContext";
 
-export default function AddAPlant({navigation, route}) {
-    const {setMyPlantList} = route.params;
+export default function AddAPlant({navigation}) {
+    const {setMyPlantsList} = useContext(PlantContext)
 
     const [speciesName, setSpeciesName] = useState()
     const [plantName, setPlantName] = useState()
@@ -19,7 +20,7 @@ export default function AddAPlant({navigation, route}) {
 
     const onSubmitHandler = (() => {
         setIsVisible(true)
-        setMyPlantList((currentPlantList) => [...currentPlantList, {
+        setMyPlantsList((currentPlantsList) => [...currentPlantsList, {
             species: speciesName,
             name: plantName,
             water: waterNeeded,

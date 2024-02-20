@@ -1,16 +1,19 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState, useContext} from "react";
 import { View, Text, FlatList, StyleSheet, ScrollView, Image, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { PlantContext } from "../Contexts/PlantContext";
 
 export default function ListOfPlants() {
-    const [myPlantList, setMyPlantList] = useState([])
+    const {myPlantsList} = useContext(PlantContext)
+
+
     const navigation = useNavigation()
 
-    if (myPlantList.length !== 0) {
+    if (myPlantsList.length !== 0) {
       return (
         <View>
           <ScrollView>
-          { myPlantList.map(plant => (
+          { myPlantsList.map(plant => (
             <View key={Math.random()} style={styles.plant}>
                 <View style={styles.blockText}>
                 </View>
@@ -31,7 +34,7 @@ export default function ListOfPlants() {
                 </View>  
             </View>
             ))}
-            <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant", { setMyPlantList: setMyPlantList })} />
+            <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant")} />
           </ScrollView>
         </View>
       );
@@ -40,7 +43,7 @@ export default function ListOfPlants() {
         <View style={styles.container}>
           <Text style={styles.blockText}>You have no plants!</Text>
           <Image source={{uri: "https://i.ibb.co/2SGcvqL/SadPlant.png"}} style={{width: 150, height: 150, marginBottom: 30}}/>
-          <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant", { setMyPlantList: setMyPlantList })} />
+          <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant")} />
         </View>
       )
     }
