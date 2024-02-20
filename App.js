@@ -8,17 +8,17 @@ import { PlantProvider } from './src/Contexts/PlantContext';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  
+
   return (
     <PlantProvider>
-        <NavigationContainer>
-          <NavBar/>
-          <Stack.Navigator initialRouteName="PlantsList">
-            <Stack.Screen name="PlantsList" component={ListOfPlants}  />
-            <Stack.Screen name="AddPlant" component={AddAPlant} />
-            <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
-          </Stack.Navigator>
-        </NavigationContainer>
+      <NavigationContainer>
+        <NavBar />
+        <Stack.Navigator initialRouteName="PlantsList">
+          <Stack.Screen name="MyPlants" component={ListOfPlants} />
+          <Stack.Screen name="AddPlant" component={AddAPlant} />
+          <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </PlantProvider>
   );
 }

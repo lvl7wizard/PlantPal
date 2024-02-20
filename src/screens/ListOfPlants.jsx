@@ -1,13 +1,11 @@
-import { useEffect, useState, useContext} from "react";
-import { View, Text, FlatList, StyleSheet, ScrollView, Image, Button } from "react-native";
+import { useContext} from "react";
+import { View, Text, StyleSheet, ScrollView, Image, Button, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { PlantContext } from "../Contexts/PlantContext";
 import PlantCard from "./PlantCard";
 
 export default function ListOfPlants() {
     const {myPlantsList} = useContext(PlantContext)
-
-
     const navigation = useNavigation()
 
     if (myPlantsList.length !== 0) {
@@ -19,7 +17,9 @@ export default function ListOfPlants() {
                 <PlantCard plant={plant}/>
             </View>
             ))}
-            <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant")} />
+             <Pressable style={styles.button} onPress={() => navigation.navigate("AddPlant")}>
+              <Text style={styles.subtitle}>Add a Plant</Text>
+            </Pressable>
           </ScrollView>
         </View>
       );
@@ -27,8 +27,10 @@ export default function ListOfPlants() {
       return (
         <View style={styles.container}>
           <Text style={styles.blockText}>You have no plants!</Text>
-          <Image source={{uri: "https://i.ibb.co/2SGcvqL/SadPlant.png"}} style={{width: 150, height: 150, marginBottom: 30}}/>
-          <Button title="Add a Plant" onPress={() => navigation.navigate("AddPlant")} />
+          <Image source={{uri: "https://i.ibb.co/C9xPQjr/SadPlant.png"}} style={{width: 150, height: 150, marginBottom: 30}}/>
+          <Pressable style={styles.button} onPress={() => navigation.navigate("AddPlant")}>
+              <Text style={{fontSize: 16, color: '#fff'}}>Add Plant</Text>
+          </Pressable>
         </View>
       )
     }
@@ -39,6 +41,7 @@ export default function ListOfPlants() {
         backgroundColor: 'white',
         justifyContent: "center",
         alignItems: "center",
+        flex: 1
       },
       plant: {
         padding: 10,
@@ -47,5 +50,18 @@ export default function ListOfPlants() {
         color: 'white',
         fontSize: 24,
         textAlign: 'center',
-      }
+      },
+      blockText: {
+        marginVertical: 20,
+        fontSize: 24
+    },
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 10,
+      backgroundColor: "limegreen",
+      width: "min-content",
+      padding: 10,
+      margin: 20,
+    },
     });

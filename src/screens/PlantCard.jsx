@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Button, Image, Pressable } from "react-native";
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 export default function PlantCard({plant}) {
     return (
         <>
@@ -19,11 +20,16 @@ export default function PlantCard({plant}) {
                 <Image source={{ uri: plant.image}} style={{width: 150, height: 150}}/>
             </View>
             <View>
-                <Button title="💧"/>
-                <Button title="🍴"/>
-                <Pressable style={styles.button}>
-                    <Text style={styles.text}>Delete Plant</Text>
+               
+            <View style={styles.topRow}>
+                <View>
+                    <Text style={[styles.blockText, styles.text]}>💧 Water Me</Text>
+                    <Text style={[styles.blockText, styles.text]}>🍴 Feed Me</Text>
+                </View>
+                <Pressable style={styles.bottomRightContainer}>
+                    <FontAwesomeIcon icon={ faTrash } color="red" size={30} />
                 </Pressable>
+            </View>
             </View> 
         </>
     )
@@ -37,12 +43,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 10,
-        backgroundColor: "red",
         color: "white",
         width: "min-content",
         padding: 10
       },
     text: {
         color: "white"
-    }
+    },
+    topRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+      },
+    bottomRightContainer: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
 })
