@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Button, StyleSheet, Modal } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Modal, Pressable } from "react-native";
 import { useState, useContext} from "react";
 import { PlantContext } from "../Contexts/PlantContext";
 
@@ -78,8 +78,12 @@ export default function AddAPlant({navigation}) {
                 onChangeText={(val) => setPlantImageURL(val)}
                 />
             </View>
-                <Button title="Add my plant" onPress={onSubmitHandler} style={{marginBottom: 20}}/>
-                <Button title="Upload a photo" onPress={choosePhotoHandler}/>
+                <Pressable style={styles.button} onPress={onSubmitHandler}>
+                    <Text style={styles.text}>Add my plant</Text>
+                </Pressable>
+                <Pressable style={styles.button} onPress={choosePhotoHandler}>
+                    <Text style={styles.text}>Upload a photo</Text>
+                </Pressable>
         </View>
     )
 }
@@ -98,5 +102,13 @@ const styles = StyleSheet.create({
     InputGroup: {
         paddingVertical: 10,
         textAlign: 'center',
-    }
+    },
+    button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 10,
+        backgroundColor: "limegreen",
+        width: "min-content",
+        padding: 10
+      },
 });
