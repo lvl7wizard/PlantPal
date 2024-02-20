@@ -1,7 +1,9 @@
 import { View, Text, TextInput, Button, StyleSheet, Modal } from "react-native";
 import { useState } from "react";
 
-export default function AddAPlant({setMyPlantList}) {
+export default function AddAPlant({navigation, route}) {
+    const {setMyPlantList} = route.params;
+
     const [speciesName, setSpeciesName] = useState()
     const [plantName, setPlantName] = useState()
     const [waterNeeded, setWaterNeeded] = useState()
@@ -11,6 +13,10 @@ export default function AddAPlant({setMyPlantList}) {
       );
     const [isVisible, setIsVisible] = useState(false)
     
+        const choosePhotoHandler = () => {
+            navigation.navigate("PhotoLibrary")
+        }
+
     const onSubmitHandler = (() => {
         setIsVisible(true)
         setMyPlantList((currentPlantList) => [...currentPlantList, {
@@ -20,6 +26,7 @@ export default function AddAPlant({setMyPlantList}) {
             food: foodNeeded,
             image: plantImageURL
         }])
+        navigation.navigate("PlantsList")
     })
 
     const toggleVisibility = () => {
@@ -70,7 +77,8 @@ export default function AddAPlant({setMyPlantList}) {
                 onChangeText={(val) => setPlantImageURL(val)}
                 />
             </View>
-                <Button title="Add my plant" onPress={onSubmitHandler}/>
+                <Button title="Add my plant" onPress={onSubmitHandler} style={{marginBottom: 20}}/>
+                <Button title="Upload a photo" onPress={choosePhotoHandler}/>
         </View>
     )
 }
