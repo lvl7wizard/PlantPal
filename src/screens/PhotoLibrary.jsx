@@ -23,9 +23,9 @@ export default function PhotoLibrary() {
   return (
     <>
      <View style={styles.container}>
-      <Pressable style={styles.button} onPress={pickImageAsync}>
+      {/* <Pressable style={styles.button} onPress={pickImageAsync}>
         <Text style={styles.text}>Choose Photo</Text>
-      </Pressable>
+      </Pressable> */}
         <Pressable style={styles.button} onPress={() => navigation.navigate("TakeAPhoto")}>
           <Text style={styles.text}>Take Photo</Text>
       </Pressable>

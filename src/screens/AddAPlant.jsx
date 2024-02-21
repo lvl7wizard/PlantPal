@@ -20,7 +20,6 @@ import {
      if (!route.params) {
        setTakenImage("http://tinyurl.com/pct63wxr")
      } else {
-       console.log(route.params, "<---")
        setTakenImage(route.params.image)
      }
    }, [route.params])
