@@ -29,10 +29,6 @@ import {
     const [plantName, setPlantName] = useState();
     const [waterNeeded, setWaterNeeded] = useState();
     const [foodNeeded, setFoodNeeded] = useState();
-    const [plantImageURL, setPlantImageURL] = useState(
-      'https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    );
-    const [isVisible, setIsVisible] = useState(false);
   
     const choosePhotoHandler = () => {
       navigation.navigate('PhotoLibrary');
@@ -56,10 +52,6 @@ import {
       }
     };
   
-    //   const toggleVisibility = () => {
-    //     setIsVisible(!isVisible);
-    //   };
-  
     return (
       <View style={styles.container}>
       <ScrollView style={{paddingHorizontal: 15, paddingTop: 5}}>
@@ -81,12 +73,6 @@ import {
           <Pressable style={styles.button} onPress={choosePhotoHandler}>
             <Text style={styles.text}>Upload a photo</Text>
           </Pressable>
-            <Text>Enter an image link of your plant: </Text>
-          <TextInput
-            placeholder="e.g. https://picsum.photos/200"
-            onChangeText={(val) => setPlantImageURL(val)}
-            style={styles.input}
-          />
             
         <View style={styles.InputGroup}>
           <Text>Enter species name:</Text>
@@ -112,6 +98,7 @@ import {
   
           />
         </View>
+        
         <View style={styles.InputGroup}>
           <Text>How many days apart does your plant need plant food? </Text>
           <TextInput
@@ -124,14 +111,6 @@ import {
   
           />
         </View>
-  
-        {/* { isVisible ?  <View style={styles.InputGroup}> <Text>
-                      Your {speciesName} is called {plantName}. It should be watered every {waterNeeded} days and needs plant food every {foodNeeded} days.
-                  </Text> </View> : null } */}
-  
-        <View style={styles.InputGroup}>
-        </View>
-       
        
         <Pressable style={styles.button} onPress={onSubmitHandler}>
           <Text style={styles.text}>Add my plant</Text>
@@ -190,6 +169,4 @@ import {
       alignItems: "center",
       paddingTop: 10,
     }
-
   });
-  
