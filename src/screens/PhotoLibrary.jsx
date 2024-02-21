@@ -6,14 +6,14 @@ import { useState, useEffect } from 'react';
 export default function PhotoLibrary({route}) {
   const [takenImage, setTakenImage] = useState("http://tinyurl.com/pct63wxr")
 
-  useEffect(()=> {
+   useEffect(()=> {
     if (!route.params) {
       setTakenImage("http://tinyurl.com/pct63wxr")
     } else {
       console.log(route.params)
       setTakenImage(route.params.image)
     }
-  }, [takenImage])
+  }, [route.params])
 
   const navigation = useNavigation()
 
