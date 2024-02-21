@@ -19,7 +19,7 @@ const takePicture = async () => {
         const data = await camera.takePictureAsync(null)
         // setImage(data.uri);
         // console.log(data.uri);
-        navigation.navigate('PhotoLibrary', {image: data.uri});
+        navigation.navigate('AddPlant', {image: data.uri});
         // MediaLibrary.saveToLibraryAsync(data.uri)
     }
   }

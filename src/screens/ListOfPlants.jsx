@@ -2,7 +2,7 @@ import { useContext} from "react";
 import { View, Text, StyleSheet, ScrollView, Image, Button, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { PlantContext } from "../Contexts/PlantContext";
-import PlantCard from "./PlantCard";
+import PlantCard from "../Components/PlantCard";
 
 export default function ListOfPlants() {
     const {myPlantsList} = useContext(PlantContext)

@@ -1,4 +1,4 @@
-import NavBar from './src/screens/NavBar';
+import NavBar from './src/Components/NavBar';
 import AddAPlant from './src/screens/AddAPlant';
 import ListOfPlants from './src/screens/ListOfPlants';
 import PhotoLibrary from './src/screens/PhotoLibrary';

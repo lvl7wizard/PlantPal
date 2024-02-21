@@ -6,12 +6,24 @@ import {
     Pressable,
     ScrollView,
     Alert,
+    Image
   } from 'react-native';
-  import { useState, useContext } from 'react';
+  import { useState, useContext, useEffect } from 'react';
   import { PlantContext } from '../Contexts/PlantContext';
   
-  export default function AddAPlant({ navigation }) {
+  export default function AddAPlant({ navigation, route }) {
     const { setMyPlantsList } = useContext(PlantContext);
+
+    const [takenImage, setTakenImage] = useState("http://tinyurl.com/pct63wxr")
+
+    useEffect(()=> {
+     if (!route.params) {
+       setTakenImage("http://tinyurl.com/pct63wxr")
+     } else {
+       console.log(route.params, "<---")
+       setTakenImage(route.params.image)
+     }
+   }, [route.params])
   
     const [speciesName, setSpeciesName] = useState();
     const [plantName, setPlantName] = useState();
@@ -35,7 +47,7 @@ import {
             name: plantName,
             water: waterNeeded,
             food: foodNeeded,
-            image: plantImageURL,
+            image: takenImage,
           },
         ]);
         navigation.navigate('MyPlants');
@@ -52,6 +64,30 @@ import {
       <View style={styles.container}>
       <ScrollView style={{paddingHorizontal: 15, paddingTop: 5}}>
         <Text style={styles.title}>Add Your Plant</Text>
+          <View style={styles.InputGroup}>
+            <Text>Enter your plant's name:</Text>
+            <TextInput
+              placeholder="e.g. Planty McPlantface"
+              onChangeText={(val) => {
+                setPlantName(val);
+              }}
+              style={[styles.input, !plantName && styles.invalidInput]}
+    
+            />
+
+          <View style={styles.imageContainer}>
+            <Image style={styles.imagePreview} source={{uri: takenImage}}/>
+          </View>
+          <Pressable style={styles.button} onPress={choosePhotoHandler}>
+            <Text style={styles.text}>Upload a photo</Text>
+          </Pressable>
+            <Text>Enter an image link of your plant: </Text>
+          <TextInput
+            placeholder="e.g. https://picsum.photos/200"
+            onChangeText={(val) => setPlantImageURL(val)}
+            style={styles.input}
+          />
+            
         <View style={styles.InputGroup}>
           <Text>Enter species name:</Text>
           <TextInput
@@ -63,16 +99,6 @@ import {
   
           />
         </View>
-        <View style={styles.InputGroup}>
-          <Text>Enter your plant's name:</Text>
-          <TextInput
-            placeholder="e.g. Planty McPlantface"
-            onChangeText={(val) => {
-              setPlantName(val);
-            }}
-            style={[styles.input, !plantName && styles.invalidInput]}
-  
-          />
         </View>
         <View style={styles.InputGroup}>
           <Text>How many days apart does your plant need watering? </Text>
@@ -104,17 +130,9 @@ import {
                   </Text> </View> : null } */}
   
         <View style={styles.InputGroup}>
-          <Text>Enter an image link of your plant: </Text>
-          <TextInput
-            placeholder="e.g. https://picsum.photos/200"
-            onChangeText={(val) => setPlantImageURL(val)}
-            style={styles.input}
-  
-          />
         </View>
-        <Pressable style={styles.button} onPress={choosePhotoHandler}>
-          <Text style={styles.text}>Upload a photo</Text>
-        </Pressable>
+       
+       
         <Pressable style={styles.button} onPress={onSubmitHandler}>
           <Text style={styles.text}>Add my plant</Text>
         </Pressable>
@@ -141,9 +159,10 @@ import {
       alignItems: 'center',
       justifyContent: 'center',
       marginVertical: 10,
-      backgroundColor: 'limegreen',
-      width: 'min-content',
+      backgroundColor: "limegreen",
+      width: "min-content",
       padding: 10,
+      margin: 80,
     },
     input: {
       height: 40,
@@ -162,5 +181,15 @@ import {
     invalidInput: {
       borderColor: 'red',
     },
+    imagePreview: {
+      width: 200,
+      height: 200
+    },
+    imageContainer: {
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: 10,
+    }
+
   });
   

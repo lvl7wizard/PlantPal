@@ -3,17 +3,7 @@ import { Button, StyleSheet, Pressable, Text, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 
-export default function PhotoLibrary({route}) {
-  const [takenImage, setTakenImage] = useState("http://tinyurl.com/pct63wxr")
-
-   useEffect(()=> {
-    if (!route.params) {
-      setTakenImage("http://tinyurl.com/pct63wxr")
-    } else {
-      console.log(route.params)
-      setTakenImage(route.params.image)
-    }
-  }, [route.params])
+export default function PhotoLibrary() {
 
   const navigation = useNavigation()
 
@@ -33,7 +23,6 @@ export default function PhotoLibrary({route}) {
   return (
     <>
      <View style={styles.container}>
-      {takenImage && <Image source={{uri: takenImage}} style={{flex:1}}/>}
       <Pressable style={styles.button} onPress={pickImageAsync}>
         <Text style={styles.text}>Choose Photo</Text>
       </Pressable>
