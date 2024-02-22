@@ -10,15 +10,17 @@ import {
   } from 'react-native';
   import { useState, useContext, useEffect } from 'react';
   import { PlantContext } from '../Contexts/PlantContext';
+  import * as FileSystem from 'expo-file-system';
+  import uploadImage from "../../src/utils/api.js"
   
   export default function AddAPlant({ navigation, route }) {
     const { setMyPlantsList } = useContext(PlantContext);
-
-    const [takenImage, setTakenImage] = useState("http://tinyurl.com/pct63wxr")
+    const defaultImage = "https://i.ibb.co/xXMbNb3/defaultplant-480.png";
+    const [takenImage, setTakenImage] = useState(defaultImage)
 
     useEffect(()=> {
      if (!route.params) {
-       setTakenImage("http://tinyurl.com/pct63wxr")
+       setTakenImage(defaultImage)
      } else {
        setTakenImage(route.params.image)
      }
@@ -33,9 +35,19 @@ import {
       navigation.navigate('PhotoLibrary');
     };
   
-    const onSubmitHandler = () => {
+    const onSubmitHandler = async () => {
         if (speciesName && plantName && waterNeeded && foodNeeded) {
-        setMyPlantsList((currentPlantsList) => [
+        
+          // if the takenImage has been changed from default then
+          if (takenImage !== defaultImage) {
+            console.log("Do the conversion");
+            // convert image to base64 for upload, otherwise use that default img link as takenImage value
+            const base64Image = await FileSystem.readAsStringAsync(takenImage, { encoding: 'base64' });
+            // upload the photo to a hosting service and return the http address of the uploaded image
+              uploadImage(base64Image)
+          }
+          // create a new plant object with all fields from the form and image key with http address as value
+          setMyPlantsList((currentPlantsList) => [
           ...currentPlantsList,
           {
             species: speciesName,
