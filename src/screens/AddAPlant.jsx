@@ -42,7 +42,6 @@ export default function AddAPlant({ navigation, route }) {
     if (speciesName && plantName && waterNeeded && foodNeeded) {
       // if the takenImage has been changed from default then
       if (takenImage !== defaultImage) {
-        console.log("Do the conversion");
         // convert image to base64 for upload, otherwise use that default img link as takenImage value
         FileSystem.readAsStringAsync(takenImage, {
           encoding: "base64",
