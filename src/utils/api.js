@@ -16,7 +16,6 @@ const uploadImage = async (base64Image) => {
         body:formData
     })
     const data = await res.json() // Parse the response as JSON
-    console.log(data.data.url); // Access the parsed JSON data
     return data.data.url
 };
 

@@ -6,8 +6,8 @@ import PlantCard from "../Components/PlantCard";
 
 export default function ListOfPlants() {
     const {myPlantsList} = useContext(PlantContext)
+    console.log(myPlantsList)
     const navigation = useNavigation()
-
     if (myPlantsList.length !== 0) {
       return (
         <View>
