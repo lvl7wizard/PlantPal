@@ -16,7 +16,8 @@ useEffect(() => {
   }, []);
 const takePicture = async () => {
     if(camera){
-        const data = await camera.takePictureAsync(null)
+        const options = { quality: 0.2};
+        const data = await camera.takePictureAsync(options)
         // setImage(data.uri);
         // console.log(data.uri);
         navigation.navigate('AddPlant', {image: data.uri});
