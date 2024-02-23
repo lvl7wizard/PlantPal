@@ -34,7 +34,7 @@ const postPlant = async (newPlant) => {
     }
 
     const responseData = await response.json();
-    console.log("Success:", responseData);
+    // console.log("Success:", responseData);
   } catch (error) {
     console.error("Error:", error);
   }

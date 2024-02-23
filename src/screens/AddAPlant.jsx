@@ -47,15 +47,18 @@ export default function AddAPlant({ navigation, route }) {
         }).then((base64Image) => {
           // upload the photo to a hosting service and return the http address of the uploaded image
           uploadImage(base64Image).then((imgURL) => {
+            const newPlant = {
+              "name": plantName,
+              "description": description,
+              "username": "strawberryman",
+              "image_url": imgURL,
+              "food_inc": foodNeeded,
+              "water_inc": waterNeeded
+              }
+            postPlant(newPlant)
             setMyPlantsList((currentPlantsList) => [
               ...currentPlantsList,
-              {
-                description: description,
-                name: plantName,
-                water: waterNeeded,
-                food: foodNeeded,
-                image: imgURL
-              },
+              newPlant
             ]);
           })
         })
