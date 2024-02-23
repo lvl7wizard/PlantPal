@@ -5,6 +5,7 @@ import PhotoLibrary from './src/screens/PhotoLibrary';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PlantProvider } from './src/Contexts/PlantContext';
+import { UserProvider } from './src/Contexts/UserContext';
 import TakeAPhoto from './src/screens/TakeAPhoto';
 
 
@@ -13,6 +14,7 @@ export default function App() {
 
   return (
     <PlantProvider>
+      <UserProvider>
       <NavigationContainer>
         <NavBar />
         <Stack.Navigator initialRouteName="PlantsList">
@@ -22,6 +24,7 @@ export default function App() {
           <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
         </Stack.Navigator>
       </NavigationContainer>
+      </UserProvider>
     </PlantProvider>
   );
 }

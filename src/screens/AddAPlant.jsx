@@ -11,7 +11,8 @@ import {
 import { useState, useContext, useEffect } from "react";
 import { PlantContext } from "../Contexts/PlantContext";
 import * as FileSystem from "expo-file-system";
-import uploadImage from "../../src/utils/api.js";
+import uploadImage from "../../src/utils/imgbbUpload.js";
+import { postPlant } from "../utils/PlantPalAPI.js";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
@@ -26,7 +27,7 @@ export default function AddAPlant({ navigation, route }) {
     }
   }, [route.params]);
 
-  const [speciesName, setSpeciesName] = useState();
+  const [description, setDescription] = useState();
   const [plantName, setPlantName] = useState();
   const [waterNeeded, setWaterNeeded] = useState();
   const [foodNeeded, setFoodNeeded] = useState();
@@ -37,9 +38,7 @@ export default function AddAPlant({ navigation, route }) {
 
   const onSubmitHandler = () => {
 
-
-
-    if (speciesName && plantName && waterNeeded && foodNeeded) {
+    if (description && plantName && waterNeeded && foodNeeded) {
       // if the takenImage has been changed from default then
       if (takenImage !== defaultImage) {
         // convert image to base64 for upload, otherwise use that default img link as takenImage value
@@ -48,31 +47,36 @@ export default function AddAPlant({ navigation, route }) {
         }).then((base64Image) => {
           // upload the photo to a hosting service and return the http address of the uploaded image
           uploadImage(base64Image).then((imgURL) => {
+            const newPlant = {
+              "name": plantName,
+              "description": description,
+              "username": "strawberryman",
+              "image_url": imgURL,
+              "food_inc": foodNeeded,
+              "water_inc": waterNeeded
+              }
+            postPlant(newPlant)
             setMyPlantsList((currentPlantsList) => [
               ...currentPlantsList,
-              {
-                species: speciesName,
-                name: plantName,
-                water: waterNeeded,
-                food: foodNeeded,
-                image: imgURL
-              },
+              newPlant
             ]);
           })
         })
     
       } else {
+        const newPlant = {
+          "name": plantName,
+          "description": description,
+          "username": "strawberryman",
+          "image_url": defaultImage,
+          "food_inc": foodNeeded,
+          "water_inc": waterNeeded
+          }
+        postPlant(newPlant)
         setMyPlantsList((currentPlantsList) => [
           ...currentPlantsList,
-          {
-            species: speciesName,
-            name: plantName,
-            water: waterNeeded,
-            food: foodNeeded,
-            image: defaultImage
-          },
+          newPlant,
         ]);
-
       }
       navigation.navigate("MyPlants");
       // create a new plant object with all fields from the form and image key with http address as value
@@ -103,13 +107,13 @@ export default function AddAPlant({ navigation, route }) {
           </Pressable>
 
           <View style={styles.InputGroup}>
-            <Text>Enter species name:</Text>
+            <Text>Enter plant description:</Text>
             <TextInput
               placeholder="e.g. Spider Plant"
               onChangeText={(val) => {
-                setSpeciesName(val);
+                setDescription(val);
               }}
-              style={[styles.input, !speciesName && styles.invalidInput]}
+              style={[styles.input, !description && styles.invalidInput]}
             />
           </View>
         </View>

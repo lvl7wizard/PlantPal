@@ -2,22 +2,23 @@ import { View, Text, StyleSheet, Button, Image, Pressable } from "react-native";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 export default function PlantCard({plant}) {
+    const { format } = require('date-fns');
     return (
         <>
             <View style={styles.blockText}>
                 <Text style={{color: 'white'}}>Name: {plant.name}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Species: {plant.species}</Text>
+                <Text style={{color: 'white'}}>Description: {plant.description}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Water in: {plant.water} days</Text>
+                <Text style={{color: 'white'}}>Water on: {plant.waterDate ? format(plant.waterDate, 'yyyy-MM-dd HH:mm:ss') : 'loading...'}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Feed in: {plant.food} days</Text>
+                <Text style={{color: 'white'}}>Feed on: {plant.waterDate ? format(plant.foodDate, 'yyyy-MM-dd HH:mm:ss') : 'loading...'}</Text>
             </View>  
             <View style={styles.blockText}>
-                <Image source={{ uri: plant.image}} style={{width: 150, height: 150}}/>
+                <Image source={{ uri: plant.image_url}} style={{width: 150, height: 150}}/>
             </View>
             <View>
                
