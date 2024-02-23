@@ -9,4 +9,4 @@ const getPlants = async () => {
   console.log(res.data)
 }
 
-getPlants()
+export default getPlants;
