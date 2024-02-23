@@ -11,7 +11,7 @@ import {
 import { useState, useContext, useEffect } from "react";
 import { PlantContext } from "../Contexts/PlantContext";
 import * as FileSystem from "expo-file-system";
-import uploadImage from "../../src/utils/api.js";
+import uploadImage from "../../src/utils/imgbbUpload.js";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
