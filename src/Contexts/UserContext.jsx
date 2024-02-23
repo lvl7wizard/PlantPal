@@ -5,7 +5,7 @@ import getUser from "../utils/PlantPalAPI"
 export const UserContext = createContext()
 
 export const UserProvider = ({children}) => {
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState({plants: []})
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

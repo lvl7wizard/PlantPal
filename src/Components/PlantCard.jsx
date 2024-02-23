@@ -8,16 +8,16 @@ export default function PlantCard({plant}) {
                 <Text style={{color: 'white'}}>Name: {plant.name}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Species: {plant.species}</Text>
+                <Text style={{color: 'white'}}>Description: {plant.description}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Water in: {plant.water} days</Text>
+                <Text style={{color: 'white'}}>Water on: {plant.waterDate}</Text>
             </View>
             <View style={styles.blockText}>
-                <Text style={{color: 'white'}}>Feed in: {plant.food} days</Text>
+                <Text style={{color: 'white'}}>Feed on: {plant.foodDate}</Text>
             </View>  
             <View style={styles.blockText}>
-                <Image source={{ uri: plant.image}} style={{width: 150, height: 150}}/>
+                <Image source={{ uri: plant.image_url}} style={{width: 150, height: 150}}/>
             </View>
             <View>
                

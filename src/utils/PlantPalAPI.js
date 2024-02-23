@@ -1,34 +1,43 @@
-// const axios = require("axios")
-
-
-// const getUser = async () => {
-//   const plantAPI = axios.create({
-//     baseURL: `https://plant-pal.onrender.com/api`,
-//   });
-  
-//   const res = await plantAPI.get(`/users/mangoman123`);
-//   console.log(res.data)
-// }
-
-// export default getUser;
+const baseURL = "https://plant-pal.onrender.com/api";
 
 const getUser = async () => {
-  const baseURL = "https://plant-pal.onrender.com/api";
-  const username = "mangoman123";
+  const username = "strawberryman";
 
   try {
     // Using fetch
     const response = await fetch(`${baseURL}/users/${username}`);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const data = await response.json();
-    return data
+    return data;
   } catch (error) {
     console.error("Error fetching user:", error);
   }
 };
 
-export default getUser;
+const postPlant = async (newPlant) => {
+  try {
+    const response = await fetch(`${baseURL}/plants`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPlant),
+    });
+
+    if (!response.ok) {
+      console.log(response)
+      throw new Error("Error posting plant");
+    }
+
+    const responseData = await response.json();
+    console.log("Success:", responseData);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+export { postPlant, getUser };

@@ -6,19 +6,19 @@ import getUser from "../utils/PlantPalAPI";
 
 export default function NavBar() {
     const navigation = useNavigation()
-    const { user, setUser } = useContext(UserContext);
+    // const { user, setUser } = useContext(UserContext);
 
-    useEffect(() => {
-        getUser().then((response) => {
-            console.log(response.user, "<---- user")
-            setUser(response.user)
-        })
-      }, [])
+    // useEffect(() => {
+    //     getUser().then((response) => {
+    //         console.log(response.user, "<---- user")
+    //         setUser(response.user)
+    //     })
+    //   }, [])
 
     return (
         <View style={styles.header}>
             <Text style={styles.title}>PlantPal</Text>
-            <Text style={styles.subtitle}>Logged in as: {user.username}</Text>
+            {/* <Text style={styles.subtitle}>Logged in as: {user.username}</Text> */}
         </View>
     )
 }
