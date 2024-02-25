@@ -33,10 +33,27 @@ const postPlant = async (newPlant) => {
     }
 
     const responseData = await response.json();
-    return responseData
+    return responseData;
   } catch (error) {
     console.error("Error:", error);
   }
-};
+}
 
-export { postPlant, getUser };
+const deletePlant = async (username, plantID) => {
+  try {
+    const response = await fetch(`${baseURL}/users/${username}/plants/${plantID}`, {
+      method: "DELETE"
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting plant");
+    }
+
+    return response.status
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { postPlant, getUser, deletePlant };
