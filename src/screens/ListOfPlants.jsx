@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState} from "react";
-import { View, Text, StyleSheet, ScrollView, Image, Button, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { PlantContext } from "../Contexts/PlantContext";
 import PlantCard from "../Components/PlantCard";
 import { UserContext } from "../Contexts/UserContext";
 import { getUser } from "../utils/PlantPalAPI";
+import Loading from "../Components/Loading"
 
 
 export default function ListOfPlants() {
@@ -19,16 +20,13 @@ export default function ListOfPlants() {
             setMyPlantsList(response.user.plants)
             setIsLoading(false)
         })
-      }, [myPlantsList])
+      }, [])
 
 
     if (isLoading) {
       
       return (
-        <View style={styles.container}>
-          <ActivityIndicator size="large"/>
-          <Text style={styles.blockText}>Loading Plants</Text>
-        </View>
+        <Loading />
       )
     } 
 

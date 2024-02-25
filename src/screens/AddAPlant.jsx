@@ -12,7 +12,8 @@ import { useState, useContext, useEffect } from "react";
 import { PlantContext } from "../Contexts/PlantContext";
 import * as FileSystem from "expo-file-system";
 import uploadImage from "../../src/utils/imgbbUpload.js";
-import { postPlant } from "../utils/PlantPalAPI.js";
+import { getUser, postPlant } from "../utils/PlantPalAPI.js";
+import Loading from "../Components/Loading";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
@@ -31,59 +32,79 @@ export default function AddAPlant({ navigation, route }) {
   const [plantName, setPlantName] = useState();
   const [waterNeeded, setWaterNeeded] = useState();
   const [foodNeeded, setFoodNeeded] = useState();
+  const [isLoading, setIsLoading] = useState(false)
 
   const choosePhotoHandler = () => {
     navigation.navigate("PhotoLibrary");
   };
 
   const onSubmitHandler = () => {
-
     if (description && plantName && waterNeeded && foodNeeded) {
+      setIsLoading(true)
       // if the takenImage has been changed from default then
       if (takenImage !== defaultImage) {
         // convert image to base64 for upload, otherwise use that default img link as takenImage value
         FileSystem.readAsStringAsync(takenImage, {
-          encoding: "base64",
-        }).then((base64Image) => {
-          // upload the photo to a hosting service and return the http address of the uploaded image
-          uploadImage(base64Image).then((imgURL) => {
-            const newPlant = {
-              "name": plantName,
-              "description": description,
-              "username": "strawberryman",
-              "image_url": imgURL,
-              "food_inc": foodNeeded,
-              "water_inc": waterNeeded
-              }
-            postPlant(newPlant)
-            setMyPlantsList((currentPlantsList) => [
-              ...currentPlantsList,
-              newPlant
-            ]);
-          })
+          encoding: 'base64',
         })
-    
+          .then((base64Image) => {
+            // upload the photo to a hosting service and return the http address of the uploaded image
+            return uploadImage(base64Image);
+          })
+          .then((imgURL) => {
+            const newPlant = {
+              name: plantName,
+              description: description,
+              username: 'strawberryman',
+              image_url: imgURL,
+              food_inc: foodNeeded,
+              water_inc: waterNeeded,
+            };
+            return postPlant(newPlant);
+          })
+          .then(() => {
+            return getUser();
+          })
+          .then((response) => {
+            return setMyPlantsList(response.user.plants);
+          })
+          .then(() => {
+            navigation.navigate('MyPlants');
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       } else {
+        // Use defaultImage when takenImage is not changed
         const newPlant = {
-          "name": plantName,
-          "description": description,
-          "username": "strawberryman",
-          "image_url": defaultImage,
-          "food_inc": foodNeeded,
-          "water_inc": waterNeeded
-          }
+          name: plantName,
+          description: description,
+          username: 'strawberryman',
+          image_url: defaultImage,
+          food_inc: foodNeeded,
+          water_inc: waterNeeded,
+        };
+        
         postPlant(newPlant)
-        setMyPlantsList((currentPlantsList) => [
-          ...currentPlantsList,
-          newPlant,
-        ]);
+          .then(() => {
+            return getUser();
+          })
+          .then((response) => {
+            return setMyPlantsList(response.user.plants);
+          })
+          .then(() => {
+            navigation.navigate('MyPlants');
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       }
-      navigation.navigate("MyPlants");
-      // create a new plant object with all fields from the form and image key with http address as value
     } else {
-      Alert.alert("Please Fill In The Form");
+      Alert.alert('Please Fill In The Form');
     }
   };
+
+  if (isLoading) return (<Loading />)
 
   return (
     <View style={styles.container}>
@@ -148,7 +169,6 @@ export default function AddAPlant({ navigation, route }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

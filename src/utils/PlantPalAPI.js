@@ -29,12 +29,11 @@ const postPlant = async (newPlant) => {
     });
 
     if (!response.ok) {
-      console.log(response)
       throw new Error("Error posting plant");
     }
 
     const responseData = await response.json();
-    // console.log("Success:", responseData);
+    return responseData
   } catch (error) {
     console.error("Error:", error);
   }

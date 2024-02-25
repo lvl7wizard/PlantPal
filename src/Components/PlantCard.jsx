@@ -4,7 +4,6 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 
 export default function PlantCard({ plant }) {
-  const { format } = require('date-fns');
 
   const [waterDays, setWaterDays] = useState(0);
   const [foodDays, setFoodDays] = useState(0);
@@ -12,12 +11,14 @@ export default function PlantCard({ plant }) {
   const [waterWidth, setWaterWidth] = useState(0);
   const [foodWidth, setFoodWidth] = useState(0);
 
+  const currentDate = Date.now();
+  
   useEffect(() => {
     const maxDays = 30;
     const waterDayz = Math.round(
-      (plant.waterDate - Date.now()) / (24 * 3600000)
+      (plant.waterDate - currentDate) / (24 * 3600000)
     );
-    const foodDayz = Math.round((plant.foodDate - Date.now()) / (24 * 3600000));
+    const foodDayz = Math.round((plant.foodDate - currentDate) / (24 * 3600000));
 
     const waterAmount = (waterDayz / maxDays) * 200;
     const foodAmount = (foodDayz / maxDays) * 200;
