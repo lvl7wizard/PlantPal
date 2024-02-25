@@ -71,8 +71,8 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
             : `${waterDays} days`
             : 'loading...'}
         </Text>
-        <View style={{width: 200}}>
-            <ProgressBar animatedValue={waterBarPercentage} color="blue" />
+        <View style={{width: "85%"}}>
+            <ProgressBar animatedValue={waterBarPercentage} color="blue" style={{ height: 7, borderRadius: 50 }}/>
         </View>
       </View>
 
@@ -85,8 +85,8 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
               : `${foodDays} days`
             : 'loading...'}
         </Text>
-        <View style={{width: 200}}>
-            <ProgressBar animatedValue={foodBarPercentage} color="lightgreen" />
+        <View style={{width: "85%"}}>
+            <ProgressBar animatedValue={foodBarPercentage} color="lightgreen" style={{ height: 7, borderRadius: 50 }}/>
         </View>
       </View>
       <View>
