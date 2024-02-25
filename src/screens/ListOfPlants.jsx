@@ -12,15 +12,17 @@ export default function ListOfPlants() {
     const { user, setUser } = useContext(UserContext);
     const {myPlantsList, setMyPlantsList} = useContext(PlantContext)
     const [isLoading, setIsLoading] = useState(true)
+    const [isDeleted, setIsDeleted] = useState(false)
     const navigation = useNavigation()
 
       useEffect(() => {
         getUser().then((response) => {
+            console.log("rendered")
             setUser(response.user)
             setMyPlantsList(response.user.plants)
             setIsLoading(false)
         })
-      }, [])
+      }, [isDeleted])
 
 
     if (isLoading) {
@@ -36,7 +38,7 @@ export default function ListOfPlants() {
               <ScrollView>
               { myPlantsList.map(plant => (
                 <View key={Math.random()} style={styles.plant}>
-                    <PlantCard plant={plant}/>
+                    <PlantCard plant={plant} setIsDeleted={setIsDeleted} isDeleted={isDeleted} setIsLoading={setIsLoading}/>
                 </View>
                 ))}
                  <Pressable style={styles.button} onPress={() => navigation.navigate("AddPlant")}>

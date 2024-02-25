@@ -1,15 +1,19 @@
 import { View, Text, StyleSheet, Button, Image, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { deletePlant } from '../utils/PlantPalAPI';
+import { UserContext } from "../Contexts/UserContext";
 
-export default function PlantCard({ plant }) {
+export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading }) {
 
   const [waterDays, setWaterDays] = useState(0);
   const [foodDays, setFoodDays] = useState(0);
 
   const [waterWidth, setWaterWidth] = useState(0);
   const [foodWidth, setFoodWidth] = useState(0);
+
+  const { user, setUser } = useContext(UserContext);
 
   const currentDate = Date.now();
   
@@ -28,6 +32,18 @@ export default function PlantCard({ plant }) {
     setWaterWidth(waterAmount <= 0 ? 0 : waterAmount);
     setFoodWidth(foodAmount <= 0 ? 0 : foodAmount);
   }, []);
+
+  
+  const deleteHandler = () => {
+    setIsLoading(true)
+    // delete the plant from database
+    deletePlant(user.username, plant._id).then((code) => {
+      console.log(code)
+      setIsDeleted(!isDeleted)
+      console.log("Deleted");
+    })
+    // refresh the list or optimistic rendering
+  }
 
   return (
     <>
@@ -70,7 +86,7 @@ export default function PlantCard({ plant }) {
             <Text style={[styles.blockText, styles.text]}>💧 Water Me</Text>
             <Text style={[styles.blockText, styles.text]}>🍴 Feed Me</Text>
           </View>
-          <Pressable style={styles.bottomRightContainer}>
+          <Pressable style={styles.bottomRightContainer} onPress={deleteHandler}>
             <FontAwesomeIcon icon={faTrash} color="red" size={30} />
           </Pressable>
         </View>
