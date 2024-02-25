@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faShower, faSun } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect, useContext } from 'react';
 import { deletePlant } from '../utils/PlantPalAPI';
 import { UserContext } from "../Contexts/UserContext";
@@ -60,10 +60,10 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
         <Text style={{ color: 'white' }}>Name: {plant.name}</Text>
       </View>
       <View style={styles.blockText}>
-        <Text style={{ color: 'white' }}>Description: {plant.description}</Text>
+        <Text style={{ color: 'white' }}>Species: {plant.description}</Text>
       </View>
       <View style={styles.blockText}>
-        <Text style={{ color: 'white' }}>
+        <Text style={{ color: 'white', marginBottom: 10 }}>
           Water:{' '}
           {plant.waterDate
             ? waterDays === 0
@@ -73,12 +73,11 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
         </Text>
         <View style={{width: 200}}>
             <ProgressBar animatedValue={waterBarPercentage} color="blue" />
-          <Text style={[styles.blockText, styles.text]}>💧 Water Me</Text>
         </View>
       </View>
 
       <View style={styles.blockText}>
-      <Text style={{ color: 'white' }}>
+      <Text style={{ color: 'white', marginBottom: 10 }}>
           Feed:{' '}
           {plant.foodDate
             ? foodDays === 0
@@ -88,16 +87,16 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
         </Text>
         <View style={{width: 200}}>
             <ProgressBar animatedValue={foodBarPercentage} color="lightgreen" />
-            <Text style={[styles.blockText, styles.text]}>🍴 Feed Me</Text>
         </View>
       </View>
       <View>
-        <View style={styles.topRow}>
-          <View>
-          </View>
-          <Pressable style={styles.bottomRightContainer} onPress={deleteHandler}>
-            <FontAwesomeIcon icon={faTrash} color="red" size={30} />
-          </Pressable>
+          <View style={styles.bottomIcons}>
+              <FontAwesomeIcon icon={faShower} color="cyan" size={30} />
+              <FontAwesomeIcon icon={faSun} color="yellow" size={30} />
+              <Pressable  onPress={deleteHandler}>
+              <FontAwesomeIcon icon={faTrashAlt} color="red" size={30} />
+            </Pressable>
+            
         </View>
       </View>
     </>
@@ -106,7 +105,7 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
 
 const styles = StyleSheet.create({
   blockText: {
-    marginBottom: 10,
+    marginVertical: 5,
   },
   button: {
     alignItems: 'center',
@@ -119,15 +118,9 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
   },
-  topRow: {
+  bottomIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  bottomRightContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    justifyContent: "space-evenly",
+    marginVertical: 10,
   }
 });

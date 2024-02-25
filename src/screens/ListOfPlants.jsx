@@ -36,14 +36,14 @@ export default function ListOfPlants() {
           return (
             <View>
               <ScrollView>
+              <Pressable style={styles.button} onPress={() => navigation.navigate("AddPlant")}>
+                    <Text style={styles.text}>Add a Plant</Text>
+                  </Pressable>
               { myPlantsList.map(plant => (
                 <View key={Math.random()} style={styles.plant}>
                     <PlantCard plant={plant} setIsDeleted={setIsDeleted} isDeleted={isDeleted} setIsLoading={setIsLoading}/>
                 </View>
                 ))}
-                 <Pressable style={styles.button} onPress={() => navigation.navigate("AddPlant")}>
-                  <Text style={styles.subtitle}>Add a Plant</Text>
-                </Pressable>
               </ScrollView>
             </View>
           );
@@ -83,10 +83,13 @@ export default function ListOfPlants() {
     button: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 10,
-      backgroundColor: "limegreen",
+      marginTop: 15,
+      backgroundColor: "green",
       width: "min-content",
       padding: 10,
-      margin: 20,
+      marginHorizontal: 20
     },
+    text: {
+      color: "white"
+    }
     });
