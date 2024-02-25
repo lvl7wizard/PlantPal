@@ -128,7 +128,7 @@ export default function AddAPlant({ navigation, route }) {
           </Pressable>
 
           <View style={styles.InputGroup}>
-            <Text>Enter plant description:</Text>
+            <Text>Enter plant species:</Text>
             <TextInput
               placeholder="e.g. Spider Plant"
               onChangeText={(val) => {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: "limegreen",
     width: "min-content",
     padding: 10,
-    margin: 80,
+    margin: 70,
   },
   input: {
     height: 40,
