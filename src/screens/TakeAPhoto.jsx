@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet ,Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Camera } from 'expo-camera';
-const screenWidth = Dimensions.get('window').width;
 
-export default function TakeAPhoto({navigation}) {
+export default function TakeAPhoto({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
+  const [isTakingPicture, setIsTakingPicture] = useState(false);
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -16,10 +16,11 @@ export default function TakeAPhoto({navigation}) {
   }, []);
 
   const takePicture = async () => {
-    if(camera){
-        const options = { quality: 0.2};
-        const data = await camera.takePictureAsync(options)
-        navigation.navigate('AddPlant', {image: data.uri});
+    if (camera) {
+      setIsTakingPicture(true);
+      const options = { quality: 0.2 };
+      const data = await camera.takePictureAsync(options)
+      navigation.navigate('AddPlant', { image: data.uri });
     }
   }
 
@@ -35,8 +36,12 @@ export default function TakeAPhoto({navigation}) {
       <View style={styles.cameraContainer}>
         <Camera style={styles.camera} type={Camera.Constants.Type.back} ratio="1:1" ref={ref => setCamera(ref)}>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => takePicture()}>
-              <Text style={styles.text}>Take Picture</Text>
+            <TouchableOpacity style={styles.button} onPress={() => takePicture()} disabled={isTakingPicture}>
+              {isTakingPicture ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.text}>Take a photo</Text>
+              )}
             </TouchableOpacity>
           </View>
         </Camera>
@@ -45,6 +50,7 @@ export default function TakeAPhoto({navigation}) {
   );
 }
 
+const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -67,14 +73,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   button: {
-    width: 100,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    width: 160,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     borderRadius: 50,
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 12,
+    alignItems: 'center',
   },
   text: {
     fontSize: 18,
-    textAlign: 'center',
+    color: '#fff',
   },
 });
