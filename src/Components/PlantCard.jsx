@@ -1,37 +1,40 @@
-import { View, Text, StyleSheet, Button, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect, useContext } from 'react';
 import { deletePlant } from '../utils/PlantPalAPI';
 import { UserContext } from "../Contexts/UserContext";
+import { ProgressBar } from 'react-native-paper';
 
 export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading }) {
 
   const [waterDays, setWaterDays] = useState(0);
   const [foodDays, setFoodDays] = useState(0);
+  const [waterBarPercentage, setWaterBarPercentage] = useState(0)
+  const [foodBarPercentage, setFoodBarPercentage] = useState(0)
 
-  const [waterWidth, setWaterWidth] = useState(0);
-  const [foodWidth, setFoodWidth] = useState(0);
-
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const currentDate = Date.now();
-  
+
   useEffect(() => {
+
     const maxDays = 30;
-    const waterDayz = Math.round(
-      (plant.waterDate - currentDate) / (24 * 3600000)
-    );
-    const foodDayz = Math.round((plant.foodDate - currentDate) / (24 * 3600000));
-
-    const waterAmount = (waterDayz / maxDays) * 200;
-    const foodAmount = (foodDayz / maxDays) * 200;
-
-    setWaterDays(waterDayz);
-    setFoodDays(foodDayz);
-    setWaterWidth(waterAmount <= 0 ? 0 : waterAmount);
-    setFoodWidth(foodAmount <= 0 ? 0 : foodAmount);
+  
+    const calculatePercentage = (days) => {
+      return days > maxDays ? 1 : days / maxDays;
+    };
+  
+    const waterDaysValue = Math.round((plant.waterDate - currentDate) / (24 * 3600000));
+    const foodDaysValue = Math.round((plant.foodDate - currentDate) / (24 * 3600000));
+  
+    setWaterDays(waterDaysValue);
+    setFoodDays(foodDaysValue);
+  
+    setWaterBarPercentage(calculatePercentage(waterDaysValue));
+    setFoodBarPercentage(calculatePercentage(foodDaysValue));
   }, []);
+  
 
   
   const deleteHandler = () => {
@@ -47,6 +50,12 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
 
   return (
     <>
+     <View style={styles.blockText}>
+        <Image
+          source={{ uri: plant.image_url }}
+          style={{ width: "100%", aspectRatio: 1/1 }}
+        />
+      </View>
       <View style={styles.blockText}>
         <Text style={{ color: 'white' }}>Name: {plant.name}</Text>
       </View>
@@ -58,10 +67,14 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
           Water:{' '}
           {plant.waterDate
             ? waterDays === 0
-              ? 'Today'
-              : `${waterDays} days`
+            ? 'Today'
+            : `${waterDays} days`
             : 'loading...'}
         </Text>
+        <View style={{width: 200}}>
+            <ProgressBar animatedValue={waterBarPercentage} color="blue" />
+          <Text style={[styles.blockText, styles.text]}>💧 Water Me</Text>
+        </View>
       </View>
 
       <View style={styles.blockText}>
@@ -73,18 +86,14 @@ export default function PlantCard({ plant, setIsDeleted, isDeleted, setIsLoading
               : `${foodDays} days`
             : 'loading...'}
         </Text>
-      </View>
-      <View style={styles.blockText}>
-        <Image
-          source={{ uri: plant.image_url }}
-          style={{ width: 150, height: 150 }}
-        />
+        <View style={{width: 200}}>
+            <ProgressBar animatedValue={foodBarPercentage} color="lightgreen" />
+            <Text style={[styles.blockText, styles.text]}>🍴 Feed Me</Text>
+        </View>
       </View>
       <View>
         <View style={styles.topRow}>
           <View>
-            <Text style={[styles.blockText, styles.text]}>💧 Water Me</Text>
-            <Text style={[styles.blockText, styles.text]}>🍴 Feed Me</Text>
           </View>
           <Pressable style={styles.bottomRightContainer} onPress={deleteHandler}>
             <FontAwesomeIcon icon={faTrash} color="red" size={30} />
@@ -120,5 +129,5 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     alignItems: 'flex-end',
-  },
+  }
 });
