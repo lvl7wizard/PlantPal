@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PlantProvider } from './src/Contexts/PlantContext';
 import { UserProvider } from './src/Contexts/UserContext';
 import TakeAPhoto from './src/screens/TakeAPhoto';
-
+import Login from './src/screens/Login';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -15,15 +15,16 @@ export default function App() {
   return (
     <PlantProvider>
       <UserProvider>
-      <NavigationContainer>
-        <NavBar />
-        <Stack.Navigator initialRouteName="PlantsList">
-          <Stack.Screen name="MyPlants" component={ListOfPlants} />
-          <Stack.Screen name="AddPlant" component={AddAPlant} />
-          <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
-          <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
-        </Stack.Navigator>
-      </NavigationContainer>
+        <NavigationContainer>
+          <NavBar />
+          <Stack.Navigator initialRouteName="Login">
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="MyPlants" component={ListOfPlants} />
+            <Stack.Screen name="AddPlant" component={AddAPlant} />
+            <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
+            <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </UserProvider>
     </PlantProvider>
   );

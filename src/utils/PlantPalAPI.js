@@ -1,8 +1,6 @@
 const baseURL = "https://plant-pal.onrender.com/api";
 
-const getUser = async () => {
-  const username = "strawberryman";
-
+const getUser = async (username) => {
   try {
     const response = await fetch(`${baseURL}/users/${username}`);
 
@@ -13,7 +11,8 @@ const getUser = async () => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching user:", error);
+    // console.error("Error fetching user:", error);
+    console.error("User not found")
   }
 };
 
@@ -77,4 +76,43 @@ const patchPlant = async (water_plant, feed_plant, username, plantID) => {
   }
 }
 
-export { postPlant, getUser, deletePlant, patchPlant };
+const getUserPlants = async (username) => {
+  try {
+    const response = await fetch(`${baseURL}/users/${username}/plants`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+  }
+};
+
+const postUser = async (username, email) => {
+  try {
+    const response = await fetch(`${baseURL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        email: email
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error posting plant");
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch(error) { 
+    console.error("Error creating user:", error)
+  }
+}
+
+export { postUser, postPlant, getUser, deletePlant, patchPlant, getUserPlants };

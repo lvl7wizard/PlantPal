@@ -10,15 +10,19 @@ import {
 } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import { PlantContext } from "../Contexts/PlantContext";
+import { UserContext } from "../Contexts/UserContext";
 import * as FileSystem from "expo-file-system";
 import uploadImage from "../../src/utils/imgbbUpload.js";
-import { getUser, postPlant } from "../utils/PlantPalAPI.js";
+import { postPlant, getUserPlants } from "../utils/PlantPalAPI.js";
 import Loading from "../Components/Loading";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
   const defaultImage = "https://i.ibb.co/xXMbNb3/defaultplant-480.png";
   const [takenImage, setTakenImage] = useState(defaultImage);
+  const {user, setUser} = useContext(UserContext)
+
+  console.log(user.username);
 
   useEffect(() => {
     if (!route.params) {
@@ -55,7 +59,7 @@ export default function AddAPlant({ navigation, route }) {
             const newPlant = {
               name: plantName,
               description: description,
-              username: 'strawberryman',
+              username: user.username,
               image_url: imgURL,
               food_inc: foodNeeded,
               water_inc: waterNeeded,
@@ -63,10 +67,10 @@ export default function AddAPlant({ navigation, route }) {
             return postPlant(newPlant);
           })
           .then(() => {
-            return getUser();
+            return getUserPlants(user.username);
           })
           .then((response) => {
-            return setMyPlantsList(response.user.plants);
+            return setMyPlantsList(response.plants);
           })
           .then(() => {
             navigation.navigate('MyPlants');
@@ -79,7 +83,7 @@ export default function AddAPlant({ navigation, route }) {
         const newPlant = {
           name: plantName,
           description: description,
-          username: 'strawberryman',
+          username: user.username,
           image_url: defaultImage,
           food_inc: foodNeeded,
           water_inc: waterNeeded,
@@ -87,10 +91,10 @@ export default function AddAPlant({ navigation, route }) {
         
         postPlant(newPlant)
           .then(() => {
-            return getUser();
+            return getUserPlants(user.username);
           })
           .then((response) => {
-            return setMyPlantsList(response.user.plants);
+            return setMyPlantsList(response.plants);
           })
           .then(() => {
             navigation.navigate('MyPlants');
