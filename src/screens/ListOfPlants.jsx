@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   plant: {
     padding: 10,
     margin: 20,
-    backgroundColor: 'green',
+    backgroundColor: '#836b40',
     color: 'white',
     fontSize: 24,
     textAlign: 'center',

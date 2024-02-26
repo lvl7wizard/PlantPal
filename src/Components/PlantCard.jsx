@@ -115,7 +115,7 @@ export default function PlantCard({
             <FontAwesomeIcon icon={faSun} color="yellow" size={30} />
           </Pressable>
           <Pressable onPress={deleteHandler}>
-            <FontAwesomeIcon icon={faTrashAlt} color="red" size={30} />
+            <FontAwesomeIcon icon={faTrashAlt} color="limegreen" size={30} />
           </Pressable>
         </View>
       </View>
