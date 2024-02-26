@@ -56,4 +56,28 @@ const deletePlant = async (username, plantID) => {
   }
 }
 
-export { postPlant, getUser, deletePlant };
+const patchPlant = async (water_plant, feed_plant, username, plantID) => {
+  try {
+    const response = await fetch(`${baseURL}/users/${username}/plants/${plantID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        water_plant: water_plant,
+        feed_plant: feed_plant
+      })
+
+    });
+    // fixing this currently...
+    console.log(response.status, "<--- response")
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.log(error, "<--- error");
+  }
+}
+
+// patchPlant(true, false, "strawberryman", "65dba7ccab562625296264e3")
+
+export { postPlant, getUser, deletePlant, patchPlant };
