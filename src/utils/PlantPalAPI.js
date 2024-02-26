@@ -4,7 +4,6 @@ const getUser = async () => {
   const username = "strawberryman";
 
   try {
-    // Using fetch
     const response = await fetch(`${baseURL}/users/${username}`);
 
     if (!response.ok) {
@@ -69,15 +68,13 @@ const patchPlant = async (water_plant, feed_plant, username, plantID) => {
       })
 
     });
-    // fixing this currently...
-    console.log(response.status, "<--- response")
-    const responseData = await response.json();
-    return responseData;
+    return response.status
+    // Error returning from API "[SyntaxError: JSON Parse error: Unexpected end of input]""
+    // const responseData = await response.json();
+    // return responseData;
   } catch (error) {
     console.log(error, "<--- error");
   }
 }
-
-// patchPlant(true, false, "strawberryman", "65dba7ccab562625296264e3")
 
 export { postPlant, getUser, deletePlant, patchPlant };

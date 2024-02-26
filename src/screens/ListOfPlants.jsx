@@ -23,7 +23,7 @@ export default function ListOfPlants() {
 
   useEffect(() => {
     getUser().then((response) => {
-      console.log('rendered');
+      console.log('LIST OF PLANTS RENDERED');
       setUser(response.user);
       setMyPlantsList(response.user.plants);
       setIsLoading(false);
