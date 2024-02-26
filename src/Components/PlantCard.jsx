@@ -1,15 +1,15 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrashAlt, faShower, faSun } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useContext } from "react";
-import { deletePlant, patchPlant } from "../utils/PlantPalAPI";
 import { UserContext } from "../Contexts/UserContext";
 import { ProgressBar } from "react-native-paper";
+import deletePlantAlert from "./DeletePlantAlert";
+import patchPlantAlert from "./PatchPlantAlert";
 
 export default function PlantCard({
   plant,
   setIsDeleted,
-  isDeleted,
   setIsLoading,
 }) {
   const [waterDays, setWaterDays] = useState(0);
@@ -23,10 +23,9 @@ export default function PlantCard({
   const currentDate = Date.now();
 
   useEffect(() => {
-    console.log(`rendered ${plant.name}`)
+    console.log(`PLANT CARD RENDERED: ${plant.name}`)
     const waterInterval = plant.waterInterval / (24 * 3600000)
     const foodInterval = plant.foodInterval / (24 * 3600000)
-    const maxDays = 30;
 
     const calculateWaterPercentage = (waterDaysValue) => {
       return waterDaysValue > waterInterval ? 1 : waterDaysValue / waterInterval
@@ -51,21 +50,12 @@ export default function PlantCard({
   }, [isUpdated]);
 
   const deleteHandler = () => {
-    setIsLoading(true);
-    // delete the plant from database
-    deletePlant(user.username, plant._id).then(() => {
-      setIsDeleted(!isDeleted);
-    });
-    // refresh the list or optimistic rendering
+    deletePlantAlert(plant.name, user.username, plant._id, setIsDeleted, setIsLoading)
   };
 
-  const patchHandler = (water_plant = false, feed_plant = false) => {
-    patchPlant(water_plant, feed_plant, user.username, plant._id).then(
-      () => {
-        setIsUpdated(!isUpdated);
-      }
-    );
-  };
+  const patchHandler = ((water_plant = false, feed_plant = false) => {
+    patchPlantAlert(water_plant, feed_plant, user.username, plant._id, plant.name, setIsUpdated)
+  })
 
   return (
     <>
