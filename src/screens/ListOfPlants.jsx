@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { PlantContext } from '../Contexts/PlantContext';
 import PlantCard from '../Components/PlantCard';
 import { UserContext } from '../Contexts/UserContext';
-import { getUser } from '../utils/PlantPalAPI';
+import { getUserPlants } from '../utils/PlantPalAPI';
 import Loading from '../Components/Loading';
 
 export default function ListOfPlants() {
@@ -19,22 +19,24 @@ export default function ListOfPlants() {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isAdded, setIsAdded] = useState(false)
   const navigation = useNavigation();
-
+  
   useEffect(() => {
-    getUser().then((response) => {
-      console.log('LIST OF PLANTS RENDERED');
-      setUser(response.user);
-      setMyPlantsList(response.user.plants);
+    getUserPlants(user.username).then((response) => {
+      // console.log('LIST OF PLANTS RENDERED');
+      // setUser(response.user);
+      // console.log(response.plants);
+      setMyPlantsList(response.plants);
       setIsLoading(false);
     });
-  }, [isDeleted]);
+  }, [isDeleted, isAdded]);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (user.plants.length !== 0) {
+  if (myPlantsList.length !== 0) {
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>
