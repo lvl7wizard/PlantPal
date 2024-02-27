@@ -12,7 +12,7 @@ const getUser = async (username) => {
     return data;
   } catch (error) {
     // console.error("Error fetching user:", error);
-    console.error("User not found")
+    // console.error("User not found", "<<<< PlantPalAPI")
   }
 };
 
@@ -104,14 +104,14 @@ const postUser = async (username, email) => {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error("Error posting plant");
-    }
+    // if (!response.ok) {
+    //   throw new Error("Error posting user");
+    // }
 
     const responseData = await response.json();
     return responseData;
   } catch(error) { 
-    console.error("Error creating user:", error)
+    // console.error("Error creating user:", error)
   }
 }
 

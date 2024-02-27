@@ -17,9 +17,9 @@ export default function App() {
     <PlantProvider>
       <UserProvider>
         <NavigationContainer>
-          <NavBar />
+          {/* <NavBar /> */}
           <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
             <Stack.Screen name="MyPlants" component={ListOfPlants} />
             <Stack.Screen name="AddPlant" component={AddAPlant} />
             <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />

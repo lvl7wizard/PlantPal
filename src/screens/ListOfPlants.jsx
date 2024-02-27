@@ -13,6 +13,7 @@ import PlantCard from '../Components/PlantCard';
 import { UserContext } from '../Contexts/UserContext';
 import { getUserPlants } from '../utils/PlantPalAPI';
 import Loading from '../Components/Loading';
+import GradientBackground from '../Components/GradientBackround';
 
 
 export default function ListOfPlants({navigation}) {
@@ -39,6 +40,7 @@ export default function ListOfPlants({navigation}) {
 
   if (myPlantsList.length !== 0) {
     return (
+      <GradientBackground>
       <View style={{ flex: 1 }}>
         <ScrollView>
           {myPlantsList.map((plant) => (
@@ -61,6 +63,7 @@ export default function ListOfPlants({navigation}) {
           </Pressable>
         </View>
       </View>
+      </GradientBackground>
     );
   } else {
     return (
@@ -89,28 +92,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  plant: {
-    padding: 10,
-    margin: 20,
-    backgroundColor: '#836b40',
-    color: 'white',
-    fontSize: 24,
-    textAlign: 'center',
-  },
+  // plant: {
+  //   padding: 10,
+  //   margin: 20,
+  //   backgroundColor: '#836b40',
+  //   color: 'white',
+  //   fontSize: 24,
+  //   textAlign: 'center',
+  // },
   blockText: {
     marginVertical: 20,
     fontSize: 24,
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
-    backgroundColor: 'limegreen',
-    width: 'min-content',
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    width: "min-content",
     padding: 10,
-    marginHorizontal: 20,
+    margin: 70,
+    borderWidth: 1,
+    borderRadius: 10,
   },
   text: {
     color: 'white',
   },
+  plant: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderWidth: 0,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingTop: 5,
+    marginHorizontal: 10,
+    marginVertical: 30
+   },
 });
