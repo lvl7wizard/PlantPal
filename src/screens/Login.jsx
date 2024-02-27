@@ -9,7 +9,7 @@ export default function Login() {
   const [loginUserNameInput, setLoginUserNameInput] = useState("")
   const [signUpUserNameInput, setSignUpUserNameInput] = useState("")
   const [emailInput, setEmailInput] = useState("")
-
+  const [newAccount, setNewAccount] = useState(false)
   const navigation = useNavigation();
 
   const validateEmail = (email) => {
@@ -25,6 +25,9 @@ export default function Login() {
       if (!validateEmail(emailInput)) {
         console.log("invalid email alert bar here")
       }
+      else if (!signUpUserNameInput) {
+        console.log("please enter a username")
+      }
       else {
         const newUser = await postUser(signUpUserNameInput, emailInput)
         setUser(newUser.user)
@@ -39,11 +42,14 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
+      if (!loginUserNameInput) {
+        throw new Error("Please enter a username")
+      }
       const user = await getUser(loginUserNameInput)
       if (!user) {
         throw new Error("username doesnt exist")
       }
-      
+
       setUser({...user, username: loginUserNameInput})
       navigation.navigate('MyPlants')
     } catch (error) {
@@ -53,6 +59,7 @@ export default function Login() {
   }
     return (
         <>
+          {!newAccount ? 
             <View style={styles.container}>
                 <ScrollView style={{ paddingHorizontal: 15, paddingTop: 5 }}>
                     <Text style={styles.title}>Login</Text>
@@ -62,9 +69,13 @@ export default function Login() {
                         <Pressable onPress={handleLogin} style={styles.button}>
                         <Text style={styles.text}>Login</Text>
                         </Pressable>
+
+                        <Pressable onPress={() => setNewAccount(true)} style={[styles.button, {backgroundColor: "white", borderWidth: 2}]}>
+                          <Text style={[styles.text, {color:"black"}]}>or Sign up</Text>
+                        </Pressable>
                     </View>
                 </ScrollView>
-            </View>
+            </View> :
 
             <View style={styles.container}>
             <ScrollView style={{ paddingHorizontal: 15, paddingTop: 5 }}>
@@ -77,9 +88,16 @@ export default function Login() {
                     <Pressable onPress={handleSignUp} style={styles.button}>
                     <Text style={styles.text}>Sign Up</Text>
                     </Pressable>
+                    <Pressable onPress={() => setNewAccount(false)} style={[styles.button, {backgroundColor: "white", borderWidth: 2}]}>
+                          <Text style={[styles.text, {color:"black"}]}>Back to login</Text>
+                      </Pressable>
                 </View>
             </ScrollView>
             </View>
+            }
+            
+
+
         </>
     )
 }
