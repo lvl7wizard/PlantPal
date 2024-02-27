@@ -7,20 +7,21 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import { PlantContext } from '../Contexts/PlantContext';
 import PlantCard from '../Components/PlantCard';
 import { UserContext } from '../Contexts/UserContext';
 import { getUserPlants } from '../utils/PlantPalAPI';
 import Loading from '../Components/Loading';
 
-export default function ListOfPlants() {
+
+export default function ListOfPlants({navigation}) {
   const { user, setUser } = useContext(UserContext);
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
   const [isAdded, setIsAdded] = useState(false)
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   
   useEffect(() => {
     getUserPlants(user.username).then((response) => {
@@ -72,7 +73,7 @@ export default function ListOfPlants() {
         />
         <Pressable
           style={styles.button}
-          onPress={() => navigation.navigate('AddPlant')}
+          onPress={() => navigation.navigate('TakeAPhoto')}
         >
           <Text style={{ fontSize: 16, color: '#fff' }}>Add Plant</Text>
         </Pressable>

@@ -8,6 +8,7 @@ import { PlantProvider } from './src/Contexts/PlantContext';
 import { UserProvider } from './src/Contexts/UserContext';
 import TakeAPhoto from './src/screens/TakeAPhoto';
 import Login from './src/screens/Login';
+import PlantInfo from './src/screens/PlantInfo';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ export default function App() {
             <Stack.Screen name="AddPlant" component={AddAPlant} />
             <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
             <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
+            <Stack.Screen name="PlantInfo" component={PlantInfo}/>
           </Stack.Navigator>
         </NavigationContainer>
       </UserProvider>

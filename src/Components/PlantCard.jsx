@@ -6,6 +6,7 @@ import { UserContext } from "../Contexts/UserContext";
 import { ProgressBar } from "react-native-paper";
 import deletePlantAlert from "./DeletePlantAlert";
 import patchPlantAlert from "./PatchPlantAlert";
+import { useNavigation } from '@react-navigation/native';
 
 export default function PlantCard({
   plant,
@@ -17,6 +18,7 @@ export default function PlantCard({
   const [waterBarPercentage, setWaterBarPercentage] = useState(0);
   const [foodBarPercentage, setFoodBarPercentage] = useState(0);
   const [isUpdated, setIsUpdated] = useState(false)
+  const navigation = useNavigation();
 
   const { user } = useContext(UserContext);
 
@@ -54,16 +56,18 @@ export default function PlantCard({
   };
 
   const patchHandler = ((water_plant = false, feed_plant = false) => {
-    patchPlantAlert(water_plant, feed_plant, user.username, plant._id, plant.name, setIsUpdated)
+    patchPlantAlert(water_plant, feed_plant, user.username, plant._id, plant.name, setIsUpdated, setWaterBarPercentage, setFoodBarPercentage)
   })
 
   return (
     <>
       <View style={styles.blockText}>
+        <Pressable onPress={() => {navigation.navigate("PlantInfo", {plant})}}>
         <Image
           source={{ uri: plant.image_url }}
           style={{ width: "100%", aspectRatio: 1 / 1 }}
         />
+        </Pressable>
       </View>
       <View style={styles.blockText}>
         <Text style={{ color: "white" }}>Name: {plant.name}</Text>
@@ -84,7 +88,7 @@ export default function PlantCard({
           <ProgressBar
             animatedValue={waterBarPercentage}
             color="blue"
-            style={{ height: 7, borderRadius: 50 }}
+            style={{ height: 12, borderRadius: 50 }}
           />
         </View>
       </View>
@@ -102,7 +106,7 @@ export default function PlantCard({
           <ProgressBar
             animatedValue={foodBarPercentage}
             color="lightgreen"
-            style={{ height: 7, borderRadius: 50 }}
+            style={{ height: 12, borderRadius: 50 }}
           />
         </View>
       </View>
