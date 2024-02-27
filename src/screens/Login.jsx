@@ -4,7 +4,9 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
-  Alert
+  Alert,
+  Image,
+  Platform
 } from "react-native";
 import { useContext, useState } from "react";
 import { UserContext } from "../Contexts/UserContext";
@@ -41,17 +43,23 @@ export default function Login() {
 
   const handleSignUp = async () => {
     try {
-      if (!validateEmail(emailInput)) {
-        console.log("invalid email alert bar here");
-      } else if (!signUpUserNameInput) {
-        console.log("please enter a username");
-      } else {
+      if (!signUpUserNameInput) {
+        Alert.alert("No Username", "Please enter a username")
+      } else if (!validateEmail(emailInput)) {
+        Alert.alert("Invalid email", "Please enter a valid email address")
+      } else if (!emailInput) {
+        Alert.alert("No Email", "Please enter an email")
+      }
+      else {
         const newUser = await postUser(signUpUserNameInput, emailInput);
+        if (!newUser) {
+          Alert.alert("User Exists", "User already exists, please try again")
+        }
         setUser(newUser.user);
         navigation.navigate("MyPlants");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -73,20 +81,21 @@ export default function Login() {
           console.log(error, "<--- catch block");
         }
   
-       
   };
   return (
     <>
       {!newAccount ? (
         <GradientBackground>
-        <View style={styles.container}>
+        <Image source={require('../../assets/PlantPalLogo.png')} style={styles.Image} />
+        <Text style={styles.logoTitle}>PlantPal</Text>
           <View style={styles.formContainer}>
-            <Text style={styles.title}>Login</Text>
-            <Text>Enter your username:</Text>
+            <Text style={styles.header}>Login</Text>
             <View style={styles.InputGroup}>
               <TextInput
                 value={loginUserNameInput}
                 onChangeText={setLoginUserNameInput}
+                placeholder={"Enter Username"}
+                placeholderTextColor="#A7A8AE"
                 style={[
                   styles.input,
                   !loginUserNameInput && loginButtonClicked && styles.invalidInput,
@@ -97,7 +106,10 @@ export default function Login() {
               </Pressable>  
 
               <Pressable
-                onPress={() => setNewAccount(true)}
+                onPress={() => {
+                  setNewAccount(true)
+                  setLoginButtonClicked(false)
+                }}
                 style={[
                   styles.button,
                 ]}
@@ -107,23 +119,27 @@ export default function Login() {
                 </Text>
               </Pressable>
             </View>
-          </View>
         </View>
         </GradientBackground>
       ) : (
-        <View style={{ paddingHorizontal: 15, paddingTop: 5 }}>
-          <Text style={styles.title}>Sign Up</Text>
+        <GradientBackground>
+        <Image source={require('../../assets/PlantPalLogo.png')} style={styles.Image} />
+        <Text style={styles.logoTitle}>PlantPal</Text>
+        <View style={styles.formContainer}>
+        <Text style={styles.header}>Sign Up</Text>
           <View style={styles.InputGroup}>
-            <Text>Enter a new username:</Text>
             <TextInput
               value={signUpUserNameInput}
               onChangeText={setSignUpUserNameInput}
+              placeholder={"Enter Username"}
+              placeholderTextColor="#A7A8AE"
               style={styles.input}
             />
-            <Text>Enter your email:</Text>
             <TextInput
               value={emailInput}
               onChangeText={setEmailInput}
+              placeholder={"Enter Email"}
+              placeholderTextColor="#A7A8AE"
               style={styles.input}
             />
             <Pressable onPress={handleSignUp} style={styles.button}>
@@ -133,15 +149,15 @@ export default function Login() {
               onPress={() => setNewAccount(false)}
               style={[
                 styles.button,
-                { backgroundColor: "white", borderWidth: 2 },
               ]}
             >
-              <Text style={[styles.text, { color: "black" }]}>
+              <Text style={styles.text}>
                 Back to login
               </Text>
             </Pressable>
           </View>
         </View>
+        </GradientBackground>
       )}
     </>
   );
@@ -150,18 +166,24 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center'
   },
   formContainer: {
-    backgroundColor: 'rgba(110, 75, 43, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderWidth: 1,
     borderRadius: 10,
-    paddingHorizontal: 15, 
+    paddingHorizontal: 15,
     paddingTop: 5,
-    margin: 10,        
+    marginHorizontal: 10,
+    marginVertical: 30
    },
-
+   Image: {
+    width: 150,
+    height: 200,
+    alignSelf: "center",
+    marginTop: 20,
+   },
   title: {
+    color: "white",
     paddingBottom: 10,
     textAlign: "center",
     fontSize: 24,
@@ -174,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 10,
-    backgroundColor: "#656c4a",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     width: "min-content",
     padding: 10,
     margin: 70,
@@ -183,13 +205,17 @@ const styles = StyleSheet.create({
   },
   input: ({
     height: 40,
-    color: "#333",
+    width: "75%",
+    alignSelf: "center",
+    color: "white",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
     borderColor: "black",
     marginTop: 10,
+    marginBottom: 10,
   }),
   invalidInput: {
     borderColor: "red",
@@ -197,5 +223,16 @@ const styles = StyleSheet.create({
   text: {
     color: "#fff",
     fontSize: 16,
+  },
+  header: {
+    color: "white",
+    paddingTop: 10,
+    textAlign: "center",
+    fontSize: 24,
+  },
+  logoTitle: {
+    color: "white",
+    alignSelf: "center",
+    fontSize: 30
   },
 })
