@@ -168,8 +168,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   formContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    borderWidth: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    borderWidth: 0,
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingTop: 5,
