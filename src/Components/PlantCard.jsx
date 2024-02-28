@@ -60,7 +60,7 @@ export default function PlantCard({
   })
 
   return (
-    <>
+    <View style={styles.plant}>
       <View style={styles.blockText}>
         <Pressable onPress={() => {navigation.navigate("PlantInfo", {plant})}}>
         <Image
@@ -123,7 +123,7 @@ export default function PlantCard({
           </Pressable>
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -147,4 +147,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     marginVertical: 10,
   },
+  plant: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderWidth: 0,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingTop: 5,
+    marginHorizontal: 10,
+    marginVertical: 30
+   },
 });
