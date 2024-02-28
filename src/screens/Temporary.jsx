@@ -1,150 +1,128 @@
+import { useContext, useEffect, useState } from 'react';
 import {
+  View,
+  Text,
   StyleSheet,
-  Alert,
-  Platform,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import { useContext, useState } from "react";
-import { UserContext } from "../Contexts/UserContext";
-import { useNavigation } from "@react-navigation/native";
-import { postUser, getUser } from "../utils/PlantPalAPI";
-import GradientBackground from "../Components/GradientBackround";
-import PlantPalLogo from "../StyledComponents/PlantPalLogo";
-import FormContainer from "../StyledComponents/FormContainer";
-import FormTitle from "../StyledComponents/FormTitle";
-import FormInput from "../StyledComponents/FormInput";
-import FormButton from "../StyledComponents/FormButton";
+  ScrollView,
+  Image,
+  Pressable,
+} from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
+import { PlantContext } from '../Contexts/PlantContext';
+import PlantCard from '../Components/PlantCard';
+import { UserContext } from '../Contexts/UserContext';
+import { getUserPlants } from '../utils/PlantPalAPI';
+import Loading from '../Components/Loading';
+import GradientBackground from '../Components/GradientBackround';
 
-export default function Login() {
+
+export default function ListOfPlants({navigation}) {
   const { user, setUser } = useContext(UserContext);
-  const [loginUserNameInput, setLoginUserNameInput] = useState("");
-  const [signUpUserNameInput, setSignUpUserNameInput] = useState("");
-  const [loginButtonClicked, setLoginButtonClicked] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
-  const [newAccount, setNewAccount] = useState(false);
-  const navigation = useNavigation();
+  const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const [isAdded, setIsAdded] = useState(false)
+  // const navigation = useNavigation();
+  
+  useEffect(() => {
+    getUserPlants(user.username).then((response) => {
+      // console.log('LIST OF PLANTS RENDERED');
+      // setUser(response.user);
+      // console.log(response.plants);
+      setMyPlantsList(response.plants);
+      setIsLoading(false);
+    });
+  }, [isDeleted, isAdded]);
 
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  if (isLoading) {
+    return <Loading />;
+  }
 
-  const handleSignUp = async () => {
-    try {
-      if (!signUpUserNameInput) {
-        Alert.alert("No Username", "Please enter a username");
-      } else if (!validateEmail(emailInput)) {
-        Alert.alert("Invalid email", "Please enter a valid email address");
-      } else if (!emailInput) {
-        Alert.alert("No Email", "Please enter an email");
-      } else {
-        const newUser = await postUser(signUpUserNameInput, emailInput);
-        if (!newUser) {
-          Alert.alert("User Exists", "User already exists, please try again");
-        }
-        setUser(newUser.user);
-        navigation.navigate("MyPlants");
-      }
-    } catch (error) {
-      // console.log(error);
-    }
-  };
-
-  const handleLogin = async () => {
-    try {
-      setLoginButtonClicked(true);
-      if (loginUserNameInput) {
-        const user = await getUser(loginUserNameInput);
-        if (!user) {
-          Alert.alert("Invalid Username", "Username doesn't exist");
-        } else {
-          setUser({ ...user, username: loginUserNameInput });
-          navigation.navigate("MyPlants");
-        }
-      } else {
-        Alert.alert("No Username", "Please enter a username");
-      }
-    } catch (error) {
-      console.log(error, "<--- catch block");
-    }
-  };
-  return (
-    <>
-      {!newAccount ? (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
+  if (myPlantsList.length !== 0) {
+    return (
+      <GradientBackground>
+        <ScrollView>
+          {myPlantsList.map((plant) => (
+            <View key={plant._id} style={styles.plant}>
+              <PlantCard
+                plant={plant}
+                setIsDeleted={setIsDeleted}
+                isDeleted={isDeleted}
+                setIsLoading={setIsLoading}
+              />
+            </View>
+          ))}
+        </ScrollView>
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={styles.button}
+            onPress={() => navigation.navigate('AddPlant')}
           >
-            <GradientBackground>
-              <PlantPalLogo />
-              <FormContainer>
-                <FormTitle text={"Login"} />
-                <FormInput
-                  value={loginUserNameInput}
-                  onChangeText={setLoginUserNameInput}
-                  placeholder={"Enter Username"}
-                  placeholderTextColor="#A7A8AE"
-                  invalid={
-                    !loginUserNameInput &&
-                    loginButtonClicked
-                  }
-                />
-                <FormButton text={"Login"} pressHandler={handleLogin} />
-                <FormButton
-                  text={"Sign Up"}
-                  pressHandler={() => {
-                    setNewAccount(true);
-                    setLoginButtonClicked(false);
-                  }}
-                />
-              </FormContainer>
-            </GradientBackground>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      ) : (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
-          >
-            <GradientBackground>
-              <PlantPalLogo />
-              <FormContainer>
-                <FormTitle text={"Sign Up"} />
-                <FormInput
-                  value={signUpUserNameInput}
-                  onChangeText={setSignUpUserNameInput}
-                  placeholder={"Enter Username"}
-                  placeholderTextColor="#A7A8AE"
-                />
-                <FormInput
-                  value={emailInput}
-                  onChangeText={setEmailInput}
-                  placeholder={"Enter Email"}
-                  placeholderTextColor="#A7A8AE"
-                />
-                <FormButton text={"Sign Up"} pressHandler={handleSignUp} />
-                <FormButton
-                  text={"Back to Login"}
-                  pressHandler={() => setNewAccount(false)}
-                />
-              </FormContainer>
-            </GradientBackground>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      )}
-    </>
-  );
+            <Text style={styles.text}>Add a Plant</Text>
+          </Pressable>
+        </View>
+      </GradientBackground>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.blockText}>Welcome {user.username}</Text>
+        <Text style={styles.blockText}>You have no plants!</Text>
+        <Image
+          source={{ uri: 'https://i.ibb.co/C9xPQjr/SadPlant.png' }}
+          style={{ width: 150, height: 150, marginBottom: 30 }}
+        />
+        <Pressable
+          style={styles.button}
+          onPress={() => navigation.navigate('TakeAPhoto')}
+        >
+          <Text style={{ fontSize: 16, color: '#fff' }}>Add Plant</Text>
+        </Pressable>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
-  }
+  },
+  // plant: {
+  //   padding: 10,
+  //   margin: 20,
+  //   backgroundColor: '#836b40',
+  //   color: 'white',
+  //   fontSize: 24,
+  //   textAlign: 'center',
+  // },
+  blockText: {
+    marginVertical: 20,
+    fontSize: 24,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    width: "min-content",
+    padding: 10,
+    margin: 70,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  text: {
+    color: 'white',
+  },
+  plant: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderWidth: 0,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingTop: 5,
+    marginHorizontal: 10,
+    marginVertical: 30
+   },
 });
