@@ -1,22 +1,19 @@
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import GradientBackground from "./GradientBackround";
 
-export default function Loading() {
+export default function Loading({text = "Loading..."}) {
     return (
-      <View style={styles.container}>
+      <GradientBackground>
         <ActivityIndicator size="large"/>
-        <Text style={styles.blockText}>Loading Plants</Text>
-    </View>
+        <Text style={styles.blockText}>{text}</Text>
+      </GradientBackground>
     )
 }
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1
-  },
   blockText: {
+    color: "white",
     marginVertical: 20,
-    fontSize: 24
+    fontSize: 24,
+    alignSelf: "center"
   },
 })

@@ -16,6 +16,7 @@ import FormContainer from "../StyledComponents/FormContainer";
 import FormTitle from "../StyledComponents/FormTitle";
 import FormInput from "../StyledComponents/FormInput";
 import FormButton from "../StyledComponents/FormButton";
+import Loading from "../Components/Loading"
 
 export default function Login() {
   const { user, setUser } = useContext(UserContext);
@@ -24,6 +25,7 @@ export default function Login() {
   const [loginButtonClicked, setLoginButtonClicked] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [newAccount, setNewAccount] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const navigation = useNavigation();
 
   const validateEmail = (email) => {
@@ -43,11 +45,13 @@ export default function Login() {
       } else if (!emailInput) {
         Alert.alert("No Email", "Please enter an email");
       } else {
+        setIsLoading(true)
         const newUser = await postUser(signUpUserNameInput, emailInput);
         if (!newUser) {
           Alert.alert("User Exists", "User already exists, please try again");
         }
         setUser(newUser.user);
+        setIsLoading(false)
         navigation.navigate("MyPlants");
       }
     } catch (error) {
@@ -56,23 +60,39 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
+    // set is loading true
+    console.log(isLoading, "<-- first log");
     try {
+      console.log(isLoading)
       setLoginButtonClicked(true);
       if (loginUserNameInput) {
+        setIsLoading(true)
         const user = await getUser(loginUserNameInput);
         if (!user) {
           Alert.alert("Invalid Username", "Username doesn't exist");
+          setIsLoading(false)
         } else {
-          setUser({ ...user, username: loginUserNameInput });
-          navigation.navigate("MyPlants");
+          setUser({ ...user, username: loginUserNameInput })
+          setIsLoading(false)
+          navigation.navigate("MyPlants")
+          ;
         }
       } else {
+        setIsLoading(false)
         Alert.alert("No Username", "Please enter a username");
       }
     } catch (error) {
       console.log(error, "<--- catch block");
     }
+    // setIsLoading(false)
+    console.log(isLoading)
+    // set is loading false
   };
+
+  if (isLoading) {
+    return <Loading text={"Connecting to server..."}/>
+  }
+
   return (
     <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
