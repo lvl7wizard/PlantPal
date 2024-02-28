@@ -44,7 +44,7 @@ export default function AddAPlant({ navigation, route }) {
   const [plantButtonClicked, setPlantButtonClicked] = useState(false);
 
   const choosePhotoHandler = () => {
-    navigation.navigate("PhotoLibrary");
+    navigation.navigate("TakeAPhoto");
   };
 
   const onSubmitHandler = () => {

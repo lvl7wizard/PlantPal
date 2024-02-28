@@ -61,9 +61,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     // set is loading true
-    console.log(isLoading, "<-- first log");
     try {
-      console.log(isLoading)
       setLoginButtonClicked(true);
       if (loginUserNameInput) {
         setIsLoading(true)
@@ -84,9 +82,6 @@ export default function Login() {
     } catch (error) {
       console.log(error, "<--- catch block");
     }
-    // setIsLoading(false)
-    console.log(isLoading)
-    // set is loading false
   };
 
   if (isLoading) {
