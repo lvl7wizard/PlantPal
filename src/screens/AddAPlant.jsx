@@ -15,14 +15,18 @@ import * as FileSystem from "expo-file-system";
 import uploadImage from "../../src/utils/imgbbUpload.js";
 import { postPlant, getUserPlants } from "../utils/PlantPalAPI.js";
 import Loading from "../Components/Loading";
+import GradientBackground from "../Components/GradientBackround.jsx";
+import FormContainer from "../StyledComponents/FormContainer.jsx";
+import FormTitle from "../StyledComponents/FormTitle.jsx";
+import FormInput from "../StyledComponents/FormInput.jsx";
+import FormButton from "../StyledComponents/FormButton.jsx";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
-  const defaultImage = "https://i.ibb.co/xXMbNb3/defaultplant-480.png";
+  const defaultImage =
+    "https://i.ibb.co/QKbhk0F/Default-Plant-removebg-preview.png";
   const [takenImage, setTakenImage] = useState(defaultImage);
-  const {user, setUser} = useContext(UserContext)
-
-  console.log(user.username);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     if (!route.params) {
@@ -36,20 +40,22 @@ export default function AddAPlant({ navigation, route }) {
   const [plantName, setPlantName] = useState();
   const [waterNeeded, setWaterNeeded] = useState();
   const [foodNeeded, setFoodNeeded] = useState();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [plantButtonClicked, setPlantButtonClicked] = useState(false);
 
   const choosePhotoHandler = () => {
     navigation.navigate("PhotoLibrary");
   };
 
   const onSubmitHandler = () => {
+    setPlantButtonClicked(true);
     if (description && plantName && waterNeeded && foodNeeded) {
-      setIsLoading(true)
+      setIsLoading(true);
       // if the takenImage has been changed from default then
       if (takenImage !== defaultImage) {
         // convert image to base64 for upload, otherwise use that default img link as takenImage value
         FileSystem.readAsStringAsync(takenImage, {
-          encoding: 'base64',
+          encoding: "base64",
         })
           .then((base64Image) => {
             // upload the photo to a hosting service and return the http address of the uploaded image
@@ -73,10 +79,10 @@ export default function AddAPlant({ navigation, route }) {
             return setMyPlantsList(response.plants);
           })
           .then(() => {
-            navigation.navigate('MyPlants');
+            navigation.navigate("MyPlants");
           })
           .catch((error) => {
-            console.error('Error:', error);
+            console.error("Error:", error);
           });
       } else {
         // Use defaultImage when takenImage is not changed
@@ -88,7 +94,7 @@ export default function AddAPlant({ navigation, route }) {
           food_inc: foodNeeded,
           water_inc: waterNeeded,
         };
-        
+
         postPlant(newPlant)
           .then(() => {
             return getUserPlants(user.username);
@@ -97,129 +103,89 @@ export default function AddAPlant({ navigation, route }) {
             return setMyPlantsList(response.plants);
           })
           .then(() => {
-            navigation.navigate('MyPlants');
+            navigation.navigate("MyPlants");
           })
           .catch((error) => {
-            console.error('Error:', error);
+            console.error("Error:", error);
           });
       }
     } else {
-      Alert.alert('Please Fill In The Form');
+      Alert.alert("Please Fill In The Form");
     }
   };
 
-  if (isLoading) return (<Loading />)
+  if (isLoading) return <Loading />;
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={{ paddingHorizontal: 15, paddingTop: 5 }}>
-        <Text style={styles.title}>Add Your Plant</Text>
-        <View style={styles.InputGroup}>
-          <Text>Enter your plant's name:</Text>
-          <TextInput
-            placeholder="e.g. Planty McPlantface"
-            onChangeText={(val) => {
-              setPlantName(val);
-            }}
-            style={[styles.input, !plantName && styles.invalidInput]}
+    <GradientBackground>
+      <FormContainer>
+        <ScrollView style={{ paddingHorizontal: 15, paddingTop: 5 }}>
+          <FormTitle text={"Add Your Plant"} />
+          <Text style={styles.formLabel}>
+            Enter your plant's name:
+          </Text>
+          <FormInput
+            placeholder={"e.g Planty McPlantFace"}
+            placeholderTextColor="#A7A8AE"
+            onChangeText={setPlantName}
+            invalid={!plantName && plantButtonClicked}
+          />
+          <Image style={styles.imagePreview} source={{ uri: takenImage }} />
+          <FormButton
+            text={"Upload a Photo"}
+            pressHandler={choosePhotoHandler}
           />
 
-          <View style={styles.imageContainer}>
-            <Image style={styles.imagePreview} source={{ uri: takenImage }} />
-          </View>
-          <Pressable style={styles.button} onPress={choosePhotoHandler}>
-            <Text style={styles.text}>Upload a photo</Text>
-          </Pressable>
+          <Text style={styles.formLabel}>
+            Enter plant species:
+          </Text>
+          <FormInput
+          placeholder="e.g. Spider Plant"
+          placeholderTextColor="#A7A8AE"
+          onChangeText={setDescription}
+          invalid={!description && plantButtonClicked}
+          />
 
-          <View style={styles.InputGroup}>
-            <Text>Enter plant species:</Text>
-            <TextInput
-              placeholder="e.g. Spider Plant"
-              onChangeText={(val) => {
-                setDescription(val);
-              }}
-              style={[styles.input, !description && styles.invalidInput]}
+          <Text style={styles.formLabel}>
+            How manys apart does it need watering?
+          </Text>
+          <FormInput
+            placeholder={"e.g 10"}
+            placeholderTextColor="#A7A8AE"
+            keyboardType="numeric"
+            onChangeText={setWaterNeeded}
+            invalid={!waterNeeded && plantButtonClicked}
+          />
+            <Text style={styles.formLabel}>
+              How many days apart does it need feeding?
+            </Text>
+            <FormInput
+              placeholder={"e.g 30"}
+              placeholderTextColor="#A7A8AE"
+              keyboardType="numeric"
+              onChangeText={setFoodNeeded}
+              invalid={!foodNeeded && plantButtonClicked}
             />
-          </View>
-        </View>
-        <View style={styles.InputGroup}>
-          <Text>How many days apart does your plant need watering? </Text>
-          <TextInput
-            keyboardType="numeric"
-            placeholder="e.g. 10"
-            onChangeText={(val) => {
-              setWaterNeeded(val);
-            }}
-            style={[styles.input, !waterNeeded && styles.invalidInput]}
-          />
-        </View>
 
-        <View style={styles.InputGroup}>
-          <Text>How many days apart does your plant need plant food? </Text>
-          <TextInput
-            keyboardType="numeric"
-            placeholder="e.g. 30"
-            onChangeText={(val) => {
-              setFoodNeeded(val);
-            }}
-            style={[styles.input, !foodNeeded && styles.invalidInput]}
-          />
-        </View>
-
-        <Pressable style={styles.button} onPress={onSubmitHandler}>
-          <Text style={styles.text}>Add my plant</Text>
-        </Pressable>
-      </ScrollView>
-    </View>
+          <FormButton 
+            text={"Add My Plant"}
+            pressHandler={onSubmitHandler}
+            />
+        </ScrollView>
+      </FormContainer>
+    </GradientBackground>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  title: {
-    paddingBottom: 10,
-    textAlign: "center",
-    fontSize: 24,
-  },
-  InputGroup: {
-    paddingVertical: 10,
-    textAlign: "center",
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-    backgroundColor: "limegreen",
-    width: "min-content",
-    padding: 10,
-    margin: 70,
-  },
-  input: {
-    height: 40,
-    borderColor: "green",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: "#333",
-    marginTop: 10,
-  },
-  text: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  invalidInput: {
-    borderColor: "red",
-  },
   imagePreview: {
     width: 200,
     height: 200,
-  },
-  imageContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    alignSelf: "center",
     paddingTop: 10,
   },
+  formLabel: {
+    alignSelf: "center",
+    color: "#fff",
+    fontSize: 16,
+  }
 });
