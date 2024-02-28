@@ -9,6 +9,7 @@ import { UserProvider } from './src/Contexts/UserContext';
 import TakeAPhoto from './src/screens/TakeAPhoto';
 import Login from './src/screens/Login';
 import PlantInfo from './src/screens/PlantInfo';
+import GradientBackground from './src/Components/GradientBackround';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -18,7 +19,12 @@ export default function App() {
       <UserProvider>
         <NavigationContainer>
           {/* <NavBar /> */}
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="Login"  screenOptions={{
+          headerStyle: {
+            backgroundColor: '#8a9a99',
+          },
+          headerTintColor: '#fff',
+        }}>
             <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
             <Stack.Screen name="MyPlants" component={ListOfPlants} />
             <Stack.Screen name="AddPlant" component={AddAPlant} />
