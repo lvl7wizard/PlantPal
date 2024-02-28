@@ -1,28 +1,21 @@
 import {
-  View,
-  Text,
-  TextInput,
   StyleSheet,
-  Pressable,
   Alert,
-  Image,
-  Platform
+  Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useContext, useState } from "react";
 import { UserContext } from "../Contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { postUser, getUser } from "../utils/PlantPalAPI";
 import GradientBackground from "../Components/GradientBackround";
-
-// Dave things
-import styled from 'styled-components/native';
-const Container = styled.View`
-  flex: 1;
-  background-color: black;
-  align-items: center;
-  justify-content: center;
-`;
-// Dave things
+import PlantPalLogo from "../StyledComponents/PlantPalLogo";
+import FormContainer from "../StyledComponents/FormContainer";
+import FormTitle from "../StyledComponents/FormTitle";
+import FormInput from "../StyledComponents/FormInput";
+import FormButton from "../StyledComponents/FormButton";
 
 export default function Login() {
   const { user, setUser } = useContext(UserContext);
@@ -44,16 +37,15 @@ export default function Login() {
   const handleSignUp = async () => {
     try {
       if (!signUpUserNameInput) {
-        Alert.alert("No Username", "Please enter a username")
+        Alert.alert("No Username", "Please enter a username");
       } else if (!validateEmail(emailInput)) {
-        Alert.alert("Invalid email", "Please enter a valid email address")
+        Alert.alert("Invalid email", "Please enter a valid email address");
       } else if (!emailInput) {
-        Alert.alert("No Email", "Please enter an email")
-      }
-      else {
+        Alert.alert("No Email", "Please enter an email");
+      } else {
         const newUser = await postUser(signUpUserNameInput, emailInput);
         if (!newUser) {
-          Alert.alert("User Exists", "User already exists, please try again")
+          Alert.alert("User Exists", "User already exists, please try again");
         }
         setUser(newUser.user);
         navigation.navigate("MyPlants");
@@ -69,96 +61,71 @@ export default function Login() {
       if (loginUserNameInput) {
         const user = await getUser(loginUserNameInput);
         if (!user) {
-          Alert.alert("Invalid Username", "Username doesn't exist")
+          Alert.alert("Invalid Username", "Username doesn't exist");
         } else {
           setUser({ ...user, username: loginUserNameInput });
           navigation.navigate("MyPlants");
         }
-        }  else {
-          Alert.alert("No Username", "Please enter a username")
-        }
-        }catch (error) {
-          console.log(error, "<--- catch block");
-        }
-  
+      } else {
+        Alert.alert("No Username", "Please enter a username");
+      }
+    } catch (error) {
+      console.log(error, "<--- catch block");
+    }
   };
   return (
     <>
-      {!newAccount ? (
-        <GradientBackground>
-        <Image source={require('../../assets/PlantPalLogo.png')} style={styles.Image} />
-        <Text style={styles.logoTitle}>PlantPal</Text>
-          <View style={styles.formContainer}>
-            <Text style={styles.header}>Login</Text>
-            <View style={styles.InputGroup}>
-              <TextInput
-                value={loginUserNameInput}
-                onChangeText={setLoginUserNameInput}
-                placeholder={"Enter Username"}
-                placeholderTextColor="#A7A8AE"
-                style={[
-                  styles.input,
-                  !loginUserNameInput && loginButtonClicked && styles.invalidInput,
-                ]}
-              />
-              <Pressable onPress={handleLogin} style={styles.button}>
-                <Text style={styles.text}>Login</Text>
-              </Pressable>  
-
-              <Pressable
-                onPress={() => {
-                  setNewAccount(true)
-                  setLoginButtonClicked(false)
-                }}
-                style={[
-                  styles.button,
-                ]}
-              >
-                <Text style={styles.text}>
-                  Sign Up
-                </Text>
-              </Pressable>
-            </View>
-        </View>
-        </GradientBackground>
-      ) : (
-        <GradientBackground>
-        <Image source={require('../../assets/PlantPalLogo.png')} style={styles.Image} />
-        <Text style={styles.logoTitle}>PlantPal</Text>
-        <View style={styles.formContainer}>
-        <Text style={styles.header}>Sign Up</Text>
-          <View style={styles.InputGroup}>
-            <TextInput
-              value={signUpUserNameInput}
-              onChangeText={setSignUpUserNameInput}
-              placeholder={"Enter Username"}
-              placeholderTextColor="#A7A8AE"
-              style={styles.input}
-            />
-            <TextInput
-              value={emailInput}
-              onChangeText={setEmailInput}
-              placeholder={"Enter Email"}
-              placeholderTextColor="#A7A8AE"
-              style={styles.input}
-            />
-            <Pressable onPress={handleSignUp} style={styles.button}>
-              <Text style={styles.text}>Sign Up</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setNewAccount(false)}
-              style={[
-                styles.button,
-              ]}
-            >
-              <Text style={styles.text}>
-                Back to login
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-        </GradientBackground>
-      )}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
+        >
+          <GradientBackground>
+            <PlantPalLogo />
+            {!newAccount ? (
+              <FormContainer>
+                <FormTitle text={"Login"} />
+                <FormInput
+                  value={loginUserNameInput}
+                  onChangeText={setLoginUserNameInput}
+                  placeholder={"Enter Username"}
+                  placeholderTextColor="#A7A8AE"
+                  invalid={!loginUserNameInput && loginButtonClicked}
+                />
+                <FormButton text={"Login"} pressHandler={handleLogin} />
+                <FormButton
+                  text={"Sign Up"}
+                  pressHandler={() => {
+                    setNewAccount(true);
+                    setLoginButtonClicked(false);
+                  }}
+                />
+              </FormContainer>
+            ) : (
+              <FormContainer>
+                <FormTitle text={"Sign Up"} />
+                <FormInput
+                  value={signUpUserNameInput}
+                  onChangeText={setSignUpUserNameInput}
+                  placeholder={"Enter Username"}
+                  placeholderTextColor="#A7A8AE"
+                />
+                <FormInput
+                  value={emailInput}
+                  onChangeText={setEmailInput}
+                  placeholder={"Enter Email"}
+                  placeholderTextColor="#A7A8AE"
+                />
+                <FormButton text={"Sign Up"} pressHandler={handleSignUp} />
+                <FormButton
+                  text={"Back to Login"}
+                  pressHandler={() => setNewAccount(false)}
+                />
+              </FormContainer>
+            )}
+          </GradientBackground>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </>
   );
 }
@@ -167,72 +134,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  formContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    borderWidth: 0,
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingTop: 5,
-    marginHorizontal: 10,
-    marginVertical: 30
-   },
-   Image: {
-    width: 150,
-    height: 200,
-    alignSelf: "center",
-    marginTop: 20,
-   },
-  title: {
-    color: "white",
-    paddingBottom: 10,
-    textAlign: "center",
-    fontSize: 24,
-  },
-  InputGroup: {
-    paddingVertical: 10,
-    textAlign: "center",
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    width: "min-content",
-    padding: 10,
-    margin: 70,
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  input: ({
-    height: 40,
-    width: "75%",
-    alignSelf: "center",
-    color: "white",
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    borderColor: "black",
-    marginTop: 10,
-    marginBottom: 10,
-  }),
-  invalidInput: {
-    borderColor: "red",
-  },
-  text: {
-    color: "#fff",
-    fontSize: 16,
-  },
-  header: {
-    color: "white",
-    paddingTop: 10,
-    textAlign: "center",
-    fontSize: 24,
-  },
-  logoTitle: {
-    color: "white",
-    alignSelf: "center",
-    fontSize: 30
-  },
-})
+});
