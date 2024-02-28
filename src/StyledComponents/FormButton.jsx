@@ -5,11 +5,11 @@ align-items: center;
 justify-content: center;
 margin-vertical: 10px;
 background-color: rgba(0, 0, 0, 0.4);
-width: min-content;
+width: 75%;
 padding: 10px;
-margin-horizontal: 70px;
 border-width: 1px;
 border-radius: 10px;
+align-self: center;
 `
 const StyledText = styled.Text`
 color: #fff;
