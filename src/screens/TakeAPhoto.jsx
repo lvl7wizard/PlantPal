@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
-import { Camera } from 'expo-camera';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+import { Camera } from "expo-camera";
+import GradientBackground from "../Components/GradientBackround";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function TakeAPhoto({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -10,7 +20,7 @@ export default function TakeAPhoto({ navigation }) {
   useEffect(() => {
     const getCameraPermission = async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === 'granted');
+      setHasCameraPermission(cameraStatus.status === "granted");
     };
     getCameraPermission();
   }, []);
@@ -19,10 +29,10 @@ export default function TakeAPhoto({ navigation }) {
     if (camera) {
       setIsTakingPicture(true);
       const options = { quality: 0.2 };
-      const data = await camera.takePictureAsync(options)
-      navigation.navigate('AddPlant', { image: data.uri });
+      const data = await camera.takePictureAsync(options);
+      navigation.navigate("AddPlant", { image: data.uri });
     }
-  }
+  };
 
   if (hasCameraPermission === null) {
     return <View />;
@@ -32,56 +42,44 @@ export default function TakeAPhoto({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.cameraContainer}>
-        <Camera style={styles.camera} type={Camera.Constants.Type.back} ratio="1:1" ref={ref => setCamera(ref)}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => takePicture()} disabled={isTakingPicture}>
-              {isTakingPicture ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.text}>Take a photo</Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      </View>
-    </View>
+    <GradientBackground>
+      <Camera
+        style={styles.camera}
+        type={Camera.Constants.Type.back}
+        ratio="1:1"
+        ref={(ref) => setCamera(ref)}
+      >
+      </Camera>
+        <TouchableOpacity
+          style={styles.takePictureButton}
+          onPress={() => takePicture()}
+          disabled={isTakingPicture}
+        >
+          {isTakingPicture ? (
+            <>
+            <ActivityIndicator color="#fff" size={90}/>
+            </>
+            
+          ) : (
+                <FontAwesomeIcon icon={faCircle} color="#8a9a99" size={90} style={{alignSelf: "center"}} />
+          )}
+        </TouchableOpacity>
+    </GradientBackground>
   );
 }
 
-const screenWidth = Dimensions.get('window').width;
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  cameraContainer: {
-    flex: 1,
-    width: screenWidth,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   camera: {
     width: screenWidth,
     aspectRatio: 1,
   },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    alignItems: 'center',
-    width: '100%',
-  },
-  button: {
-    width: 160,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 50,
+  takePictureButton: {
+    width: 115,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderRadius: 200,
     paddingVertical: 12,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    color: '#fff',
+    alignSelf: "center",
+    marginTop: 20,
   },
 });
