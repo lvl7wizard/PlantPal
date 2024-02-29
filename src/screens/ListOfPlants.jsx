@@ -11,7 +11,7 @@ import NoPlantsMsg from "../StyledComponents/NoPlantMsg";
 
 export default function ListOfPlants({ navigation }) {
   const { user } = useContext(UserContext);
-  const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
+  const { myPlantsList, setMyPlantsList, plantsListChanged, setPlantsListChanged } = useContext(PlantContext);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleted, setIsDeleted] = useState(false);
   const [isAdded] = useState(false);
@@ -24,7 +24,7 @@ export default function ListOfPlants({ navigation }) {
       setIsLoading(false);
       navigation.setOptions({headerShown:true})
     });
-  }, [isDeleted, isAdded]);
+  }, [isDeleted, isAdded, plantsListChanged]);
   
   if (isLoading) {
     return <Loading text={"Loading plants..."}/>;
@@ -47,7 +47,7 @@ export default function ListOfPlants({ navigation }) {
           </ScrollView>
           <FormButton
             text={"Add a Plant"}
-            pressHandler={() => navigation.navigate("AddPlant")}
+            pressHandler={() => navigation.navigate("Selector")}
           />
         </>
       ) : (
@@ -55,7 +55,7 @@ export default function ListOfPlants({ navigation }) {
           <NoPlantsMsg username={user.username} />
           <FormButton
             text={"Add a Plant"}
-            pressHandler={() => navigation.navigate("AddPlant")}
+            pressHandler={() => navigation.navigate("Selector")}
           />
         </>
       )}

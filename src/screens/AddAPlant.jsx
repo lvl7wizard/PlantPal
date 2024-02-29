@@ -7,7 +7,12 @@ import {
   ScrollView,
   Alert,
   Image,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform
 } from "react-native";
+
 import { useState, useContext, useEffect } from "react";
 import { PlantContext } from "../Contexts/PlantContext";
 import { UserContext } from "../Contexts/UserContext";
@@ -15,6 +20,7 @@ import * as FileSystem from "expo-file-system";
 import uploadImage from "../../src/utils/imgbbUpload.js";
 import { postPlant, getUserPlants } from "../utils/PlantPalAPI.js";
 import Loading from "../Components/Loading";
+
 import GradientBackground from "../Components/GradientBackround.jsx";
 import FormContainer from "../StyledComponents/FormContainer.jsx";
 import FormTitle from "../StyledComponents/FormTitle.jsx";
@@ -23,18 +29,9 @@ import FormButton from "../StyledComponents/FormButton.jsx";
 
 export default function AddAPlant({ navigation, route }) {
   const { myPlantsList, setMyPlantsList } = useContext(PlantContext);
-  const defaultImage =
-    "https://i.ibb.co/QKbhk0F/Default-Plant-removebg-preview.png";
+  const defaultImage = "https://i.ibb.co/QKbhk0F/Default-Plant-removebg-preview.png";
   const [takenImage, setTakenImage] = useState(defaultImage);
   const { user, setUser } = useContext(UserContext);
-
-  useEffect(() => {
-    if (!route.params) {
-      setTakenImage(defaultImage);
-    } else {
-      setTakenImage(route.params.image);
-    }
-  }, [route.params]);
 
   const [description, setDescription] = useState();
   const [plantName, setPlantName] = useState();
@@ -42,9 +39,24 @@ export default function AddAPlant({ navigation, route }) {
   const [foodNeeded, setFoodNeeded] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [plantButtonClicked, setPlantButtonClicked] = useState(false);
+  const [speciesValue, setSpeciesValue] = useState("")
+
+  useEffect(() => {
+    if (route.params?.image) {
+      setTakenImage(route.params?.image);
+    } else {
+      setTakenImage(defaultImage);
+    }
+
+    if (route.params?.identifiedImageResult) {
+      setSpeciesValue(identifiedImageResult.result.classification.suggestions[0].name)
+    }
+
+  }, [route.params]);
+
 
   const choosePhotoHandler = () => {
-    navigation.navigate("TakeAPhoto");
+    navigation.navigate("TakeAPhoto", {afterPhotoTaken: "AddPlant"});
   };
 
   const onSubmitHandler = () => {
@@ -117,6 +129,12 @@ export default function AddAPlant({ navigation, route }) {
   if (isLoading) return <Loading />;
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          style={styles.container}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 55 : 0}
+        >
     <GradientBackground>
       <FormContainer>
         <ScrollView style={{ paddingHorizontal: 15, paddingTop: 5 }}>
@@ -174,6 +192,8 @@ export default function AddAPlant({ navigation, route }) {
         </ScrollView>
       </FormContainer>
     </GradientBackground>
+    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({
@@ -187,5 +207,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     color: "#fff",
     fontSize: 16,
+  },
+  container: {
+    flex: 1
   }
+
 });

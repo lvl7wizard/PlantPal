@@ -19,6 +19,7 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
   const [foodDays, setFoodDays] = useState(0);
   const [waterBarPercentage, setWaterBarPercentage] = useState(0);
   const [foodBarPercentage, setFoodBarPercentage] = useState(0);
+  const [isUpdated, setIsUpdated] = useState(false)
   const navigation = useNavigation();
 
   const { user } = useContext(UserContext);
@@ -94,7 +95,7 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
       </Text>
       <Pressable
         onPress={() => {
-          navigation.navigate("PlantInfo", { plant });
+          navigation.navigate("PlantDetails", { plant });
         }}
       >
         <Image
@@ -171,11 +172,11 @@ const styles = StyleSheet.create({
   },
   plantContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.4)",
-    borderWidth: 0,
+    borderWidth: 1,
     borderRadius: 30,
     paddingHorizontal: 30,
-    paddingTop: 5,
+    paddingTop: 10,
     marginHorizontal: 10,
-    marginVertical: 30,
+    marginVertical: 20,
   },
 });

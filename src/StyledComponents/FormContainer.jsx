@@ -8,7 +8,7 @@ padding-horizontal: 5%;
 padding-top: 5%;
 padding-bottom: 10%;
 margin-horizontal: 5%;
-margin-vertical: 10%;
+margin-vertical: 5%;
 `
 
 export default FormContainer;
