@@ -55,7 +55,8 @@ export default function Login() {
         setIsLoading(true);
         const newUser = await postUser(signUpUserNameInput, emailInput);
         if (!newUser) {
-          Alert.alert("User Exists", "User already exists, please try again");
+          Alert.alert("Error Signing Up", "User already exists, please try again");
+          setIsLoading(false)
         }
         setUser(newUser.user);
         setIsLoading(false);

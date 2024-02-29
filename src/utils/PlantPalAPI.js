@@ -105,14 +105,14 @@ const postUser = async (username, email) => {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error("Error posting plant");
-    }
+    // if (!response.ok) {``
+    //   throw new Error("Error creating user");
+    // }
 
     const responseData = await response.json();
     return responseData;
   } catch(error) { 
-    console.error("Error creating user:", error)
+    // console.error("Error creating user:", error)
   }
 }
 
