@@ -11,8 +11,7 @@ import { Camera } from "expo-camera";
 import GradientBackground from "../Components/GradientBackround";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-
-export default function TakeAPhoto({ navigation }) {
+export default function TakeAPhoto({ navigation, route }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [isTakingPicture, setIsTakingPicture] = useState(false);
@@ -29,10 +28,10 @@ export default function TakeAPhoto({ navigation }) {
     if (camera) {
       setIsTakingPicture(true);
       const options = { quality: 0.2 };
-      const data = await camera.takePictureAsync(options);
-      navigation.navigate("AddPlant", { image: data.uri });
+      const data = await camera.takePictureAsync(options)
+      navigation.navigate(route.params.afterPhotoTaken, { image: data.uri, imageChoice:route.params.imageChoice });
     }
-  };
+  }
 
   if (hasCameraPermission === null) {
     return <View />;
@@ -57,7 +56,7 @@ export default function TakeAPhoto({ navigation }) {
         >
           {isTakingPicture ? (
             <>
-            <ActivityIndicator color="#fff" size={90}/>
+              <ActivityIndicator color="#fff" size={90}/>
             </>
             
           ) : (

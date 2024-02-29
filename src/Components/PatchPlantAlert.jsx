@@ -26,7 +26,7 @@ const patchPlantAlert = (
       {
         text: "Yes",
         onPress: () => {
-          patchPlant(water_plant, feed_plant, username, plant_id)
+          patchPlant(water_plant, feed_plant, img_url = null, image = null, username, plant_id)
             .then(() => {
               if (water_plant) {
                 setWaterBarPercentage(1);
