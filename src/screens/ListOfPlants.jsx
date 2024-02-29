@@ -18,21 +18,20 @@ export default function ListOfPlants({ navigation }) {
 
   
   useEffect(() => {
-    // here?
+    navigation.setOptions({headerShown:false})
     getUserPlants(user.username).then((response) => {
       setMyPlantsList(response.plants);
       setIsLoading(false);
+      navigation.setOptions({headerShown:true})
     });
   }, [isDeleted, isAdded]);
   
   if (isLoading) {
-    navigation.setOptions({headerShown:false})
     return <Loading text={"Loading plants..."}/>;
   }
-
+  
   return (
     <GradientBackground>
-      {navigation.setOptions({headerShown:true})}
       {myPlantsList.length !== 0 ? (
         <>
           <ScrollView>
