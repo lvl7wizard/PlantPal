@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useContext, useState } from "react";
 import { UserContext } from "../Contexts/UserContext";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { postUser, getUser } from "../utils/PlantPalAPI";
 import GradientBackground from "../Components/GradientBackround";
 import PlantPalLogo from "../StyledComponents/PlantPalLogo";
@@ -16,17 +16,24 @@ import FormContainer from "../StyledComponents/FormContainer";
 import FormTitle from "../StyledComponents/FormTitle";
 import FormInput from "../StyledComponents/FormInput";
 import FormButton from "../StyledComponents/FormButton";
-import Loading from "../Components/Loading"
+import Loading from "../Components/Loading";
+import React from "react";
 
 export default function Login() {
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [loginUserNameInput, setLoginUserNameInput] = useState("");
   const [signUpUserNameInput, setSignUpUserNameInput] = useState("");
   const [loginButtonClicked, setLoginButtonClicked] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [newAccount, setNewAccount] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(false);
+    }, [])
+  );
 
   const validateEmail = (email) => {
     return String(email)
@@ -45,13 +52,13 @@ export default function Login() {
       } else if (!emailInput) {
         Alert.alert("No Email", "Please enter an email");
       } else {
-        setIsLoading(true)
+        setIsLoading(true);
         const newUser = await postUser(signUpUserNameInput, emailInput);
         if (!newUser) {
           Alert.alert("User Exists", "User already exists, please try again");
         }
         setUser(newUser.user);
-        setIsLoading(false)
+        setIsLoading(false);
         navigation.navigate("MyPlants");
       }
     } catch (error) {
@@ -64,19 +71,18 @@ export default function Login() {
     try {
       setLoginButtonClicked(true);
       if (loginUserNameInput) {
-        setIsLoading(true)
+        setIsLoading(true);
         const user = await getUser(loginUserNameInput);
         if (!user) {
           Alert.alert("Invalid Username", "Username doesn't exist");
-          setIsLoading(false)
+          setIsLoading(false);
         } else {
-          setUser({ ...user, username: loginUserNameInput })
-          setIsLoading(false)
-          navigation.navigate("MyPlants")
-          ;
+          setUser({ ...user, username: loginUserNameInput });
+          // setIsLoading(false)
+          navigation.navigate("MyPlants");
         }
       } else {
-        setIsLoading(false)
+        setIsLoading(false);
         Alert.alert("No Username", "Please enter a username");
       }
     } catch (error) {
@@ -85,7 +91,7 @@ export default function Login() {
   };
 
   if (isLoading) {
-    return <Loading text={"Connecting to server..."}/>
+    return <Loading text={"Connecting to server..."} />;
   }
 
   return (

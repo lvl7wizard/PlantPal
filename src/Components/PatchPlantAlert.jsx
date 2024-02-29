@@ -7,12 +7,16 @@ const patchPlantAlert = (
   username,
   plant_id,
   name,
-  setIsUpdated,
+  waterInterval,
+  foodInterval,
   setWaterBarPercentage,
+  setWaterDays,
+  setFoodDays,
   setFoodBarPercentage
 ) => {
   Alert.alert(
-    `${water_plant ? "Water" : "Feed"} Plant`, `Do you want to ${water_plant ? "water" : "feed"} ${name}?`,
+    `${water_plant ? "Water" : "Feed"} Plant`,
+    `Do you want to ${water_plant ? "water" : "feed"} ${name}?`,
     [
       {
         text: "Cancel",
@@ -25,11 +29,12 @@ const patchPlantAlert = (
           patchPlant(water_plant, feed_plant, username, plant_id)
             .then(() => {
               if (water_plant) {
-                setWaterBarPercentage(1)
+                setWaterBarPercentage(1);
+                setWaterDays(waterInterval / (24 * 3600000));
               } else {
-                setFoodBarPercentage(1)
+                setFoodBarPercentage(1);
+                setFoodDays(foodInterval / (24 * 3600000));
               }
-              // setIsUpdated((currentValue) => !currentValue);
             })
             .catch((error) => {
               console.error("Error updating plant:", error);

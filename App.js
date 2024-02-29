@@ -17,6 +17,7 @@ export default function App() {
   return (
     <PlantProvider>
       <UserProvider>
+          <GradientBackground>
         <NavigationContainer>
           {/* <NavBar /> */}
           <Stack.Navigator initialRouteName="Login"  screenOptions={{
@@ -26,13 +27,14 @@ export default function App() {
           headerTintColor: '#fff',
         }}>
             <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
-            <Stack.Screen name="MyPlants" component={ListOfPlants} />
+            <Stack.Screen name="MyPlants" component={ListOfPlants} options={{headerShown: true}}/>
             <Stack.Screen name="AddPlant" component={AddAPlant} />
             <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
             <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
             <Stack.Screen name="PlantInfo" component={PlantInfo}/>
           </Stack.Navigator>
         </NavigationContainer>
+            </GradientBackground>
       </UserProvider>
     </PlantProvider>
   );

@@ -16,19 +16,23 @@ export default function ListOfPlants({ navigation }) {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isAdded] = useState(false);
 
+  
   useEffect(() => {
+    // here?
     getUserPlants(user.username).then((response) => {
       setMyPlantsList(response.plants);
       setIsLoading(false);
     });
   }, [isDeleted, isAdded]);
-
+  
   if (isLoading) {
-    return <Loading />;
+    navigation.setOptions({headerShown:false})
+    return <Loading text={"Loading plants..."}/>;
   }
 
   return (
     <GradientBackground>
+      {navigation.setOptions({headerShown:true})}
       {myPlantsList.length !== 0 ? (
         <>
           <ScrollView>

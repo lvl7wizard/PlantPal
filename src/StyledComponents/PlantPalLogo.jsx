@@ -4,9 +4,9 @@ const myImage = require('../../assets/PlantPalLogo.png');
 
 const Logo = styled.Image`
   width: 130px;
-  height: 220px;
+  height: 145px;
   align-self: center;
-  margin-top: 20px;
+  margin-top: 5%;
 `;
 
 const PlantPalTitle = styled.Text`
