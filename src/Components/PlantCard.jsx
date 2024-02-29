@@ -1,6 +1,10 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faTrashAlt, faShower, faSun, faTint } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashAlt,
+  faShower,
+  faTint,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../Contexts/UserContext";
 import { ProgressBar } from "react-native-paper";
@@ -15,7 +19,6 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
   const [foodDays, setFoodDays] = useState(0);
   const [waterBarPercentage, setWaterBarPercentage] = useState(0);
   const [foodBarPercentage, setFoodBarPercentage] = useState(0);
-  const [isUpdated, setIsUpdated] = useState(false);
   const navigation = useNavigation();
 
   const { user } = useContext(UserContext);
@@ -48,7 +51,7 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
 
     setWaterBarPercentage(calculateWaterPercentage(waterDaysValue));
     setFoodBarPercentage(calculateFoodPercentage(foodDaysValue));
-  }, [isUpdated]);
+  }, []);
 
   const deleteHandler = () => {
     deletePlantAlert(
@@ -67,8 +70,11 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
       user.username,
       plant._id,
       plant.name,
-      setIsUpdated,
+      plant.waterInterval,
+      plant.foodInterval,
       setWaterBarPercentage,
+      setWaterDays,
+      setFoodDays,
       setFoodBarPercentage
     );
   };
@@ -108,7 +114,7 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
           ? waterDays === 0
             ? "Today"
             : `${waterDays} days`
-          : "loading..."}
+          : "Loading..."}
       </Text>
       <ProgressBar
         animatedValue={waterBarPercentage}
@@ -132,7 +138,7 @@ export default function PlantCard({ plant, setIsDeleted, setIsLoading }) {
         />
       </View>
       <View style={styles.bottomIcons}>
-        <IconButton onPress={() => patchHandler(true, false)}>   
+        <IconButton onPress={() => patchHandler(true, false)}>
           <FontAwesomeIcon icon={faShower} color="#5cb5e1" size={30} />
         </IconButton>
         <IconButton onPress={() => patchHandler(false, true)}>
