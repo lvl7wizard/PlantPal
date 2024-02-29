@@ -29,14 +29,14 @@ export default function App() {
           },
           headerTintColor: '#fff',
         }}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="MyPlants" component={ListOfPlants} />
-            <Stack.Screen name="AddPlant" component={AddAPlant} />
-            <Stack.Screen name="Selector" component={Selector} />
-            <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} />
-            <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} />
-            <Stack.Screen name="PlantDetails" component={PlantDetails}/>
-            <Stack.Screen name="IdentifyingPlant" component={IdentifyingPlant}/>
+            <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
+            <Stack.Screen name="MyPlants" component={ListOfPlants} options={{title:"My Plants"}}/>
+            <Stack.Screen name="AddPlant" component={AddAPlant} options={{title:"Add Plant"}}/>
+            <Stack.Screen name="Selector" component={Selector} options={{title:"Choose Method"}}/>
+            <Stack.Screen name="PhotoLibrary" component={PhotoLibrary} options={{title:"Photo Library"}}/>
+            <Stack.Screen name="TakeAPhoto" component={TakeAPhoto} options={{title:"Take Photo"}}/>
+            <Stack.Screen name="PlantDetails" component={PlantDetails} options={{title: "Plant Details"}}/>
+            <Stack.Screen name="IdentifyingPlant" component={IdentifyingPlant} options={{title:"Identify Plant"}}/>
             <Stack.Screen name="Gallery" component={Gallery}/>
 
           </Stack.Navigator>
