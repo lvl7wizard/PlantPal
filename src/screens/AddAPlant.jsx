@@ -40,19 +40,24 @@ export default function AddAPlant({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const [plantButtonClicked, setPlantButtonClicked] = useState(false);
   const [speciesValue, setSpeciesValue] = useState("")
+  const [slug, setSlug] = useState()
+  const prediction = route.params?.prediction
+  const image = route.params?.image
 
   useEffect(() => {
-    if (route.params?.image) {
+    if (image) {
       setTakenImage(route.params?.image);
     } else {
       setTakenImage(defaultImage);
     }
-
-    if (route.params?.identifiedImageResult) {
-      setSpeciesValue(identifiedImageResult.result.classification.suggestions[0].name)
+    if (prediction) {
+      // console.log(prediction, "prediction in add a plant")
+      setSpeciesValue(prediction.name)
+      setSlug(route.params?.slug)
     }
 
-  }, [route.params]);
+
+  }, []);
 
 
   const choosePhotoHandler = () => {
@@ -61,7 +66,7 @@ export default function AddAPlant({ navigation, route }) {
 
   const onSubmitHandler = () => {
     setPlantButtonClicked(true);
-    if (description && plantName && waterNeeded && foodNeeded) {
+    if (speciesValue && plantName && waterNeeded && foodNeeded) {
       setIsLoading(true);
       // if the takenImage has been changed from default then
       if (takenImage !== defaultImage) {
@@ -76,7 +81,8 @@ export default function AddAPlant({ navigation, route }) {
           .then((imgURL) => {
             const newPlant = {
               name: plantName,
-              description: description,
+              description: speciesValue,
+              species: speciesValue,
               username: user.username,
               image_url: imgURL,
               food_inc: foodNeeded,
@@ -100,7 +106,8 @@ export default function AddAPlant({ navigation, route }) {
         // Use defaultImage when takenImage is not changed
         const newPlant = {
           name: plantName,
-          description: description,
+          description: speciesValue,
+          species: speciesValue,
           username: user.username,
           image_url: defaultImage,
           food_inc: foodNeeded,
@@ -160,7 +167,8 @@ export default function AddAPlant({ navigation, route }) {
           <FormInput
           placeholder="e.g. Spider Plant"
           placeholderTextColor="#A7A8AE"
-          onChangeText={setDescription}
+          value={speciesValue}
+          onChangeText={setSpeciesValue}
           invalid={!description && plantButtonClicked}
           />
 

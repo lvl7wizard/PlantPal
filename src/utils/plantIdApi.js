@@ -1,8 +1,9 @@
 const fetch = require('node-fetch');
-const PLANTID_API_KEY = "YXtQ1YBfeNdyCHkmxT1H0YUapK7S85iSpqgVC4Ra0ovpu9payW"
+const PLANTID_API_KEY = "iE2se41tN1aFpbnVFP2NnLrc0ZXqnYB3yAcasE7BRqwXDJQFxp"
 
 
 export const identifyPlant = async (base64Image) => {
+  try {
   const myHeaders = {
     'Content-Type': 'application/json',
     'Api-Key': PLANTID_API_KEY,
@@ -14,8 +15,7 @@ export const identifyPlant = async (base64Image) => {
     ],
     "latitude": 53.483,
     "longitude": -2.244,
-    "similar_images": true,
-    // "health": "all"
+    "similar_images": true  
   });
 
   const requestOptions = {
@@ -25,11 +25,9 @@ export const identifyPlant = async (base64Image) => {
     redirect: 'follow'
   };
 
-  try {
+
     const response = await fetch("https://plant.id/api/v3/identification", requestOptions);
-    const responseData = await response.json();
-    console.log(responseData, typeof responseData, "lwrwrk021k-0219341-02393123131232----")
-    console.log(responseData.result.classification.suggestions)
+    const responseData = response.json()
     return responseData
   } catch (error) {
     console.log('error', error);

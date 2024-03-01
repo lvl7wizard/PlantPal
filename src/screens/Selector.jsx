@@ -7,7 +7,7 @@ export default function Selector({navigation, route}) {
   return (
 
     <GradientBackground>
-      <FormButton text={"Detect Plant"} pressHandler={() => navigation.navigate("TakeAPhoto", {afterPhotoTaken: "IdentifyingPlant"})}/>
+      <FormButton text={"Identify Plant"} pressHandler={() => navigation.navigate("TakeAPhoto", {afterPhotoTaken: "IdentifyingPlant"})}/>
       <FormButton text={"Add Manually"} pressHandler={() => navigation.navigate("AddPlant")}/>
     </GradientBackground>
   );
