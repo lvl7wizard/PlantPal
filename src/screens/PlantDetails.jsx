@@ -142,7 +142,7 @@ export default function PlantDetails({ navigation }) {
       imageChoice: imageChoice,
     });
   };
-  getPlantByIDFromAPI(plant.description)
+  getPlantByIDFromAPI(plant.description.toLowerCase().split(" ").join("-"))
     .then((res) => {
       setFamily(res.data.common_name);
       setBibliography(res.data.bibliography, res.data.family);
