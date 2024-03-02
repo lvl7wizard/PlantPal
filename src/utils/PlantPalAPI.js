@@ -1,4 +1,4 @@
-const baseURL = "https://plant-pal-p6my.onrender.com/api";
+const baseURL = "https://plant-pal.onrender.com/api";
 
 const getUser = async (username) => {
   try {

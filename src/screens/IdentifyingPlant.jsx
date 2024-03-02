@@ -35,8 +35,6 @@ export default function IdentifyingPlant({navigation}) {
           console.error(error);
         });
 
-
-        
         })
   },[])           
 
@@ -84,7 +82,7 @@ export default function IdentifyingPlant({navigation}) {
             <Pressable style={[styles.cancelButton]} onPress={() => navigation.navigate("Selector")} >
               <Text style={[styles.text, {color: "white"}]}> Cancel </Text>
             </Pressable>
-            <Pressable style={[styles.confirmationButton]} onPress={() => navigation.navigate("AddPlant", {image:image, prediction: selection, slug:selection.name.toLowerCase().split(" ").join("-")})} >
+            <Pressable style={[styles.confirmationButton]} onPress={selection ? () => navigation.navigate("AddPlant", {image:image, prediction: selection, slug:selection.name.toLowerCase().split(" ").join("-")}) : null} >
               <Text style={[styles.text, {color: "black"}]}> Confirm </Text>
             </Pressable>
           </View>

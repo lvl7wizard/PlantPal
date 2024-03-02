@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image, Pressable, Modal, ScrollView} from "react-native";
 import { useState} from "react";
 import { useRoute } from "@react-navigation/native"
+import GradientBackground from "../Components/GradientBackround.jsx";
 
 
 export default function Gallery({navigation}) {
@@ -14,37 +15,39 @@ export default function Gallery({navigation}) {
 
 
   return (
-    <View style={[styles.main, { flex: 1 }]}>
-    
+    <GradientBackground>    
     {/* ---------------GALLERY----------------------- */}
       <ScrollView>
         <View style={[styles.gallery]}>
           {modalVisible ? (
             //---------------SLIDESHOW VIEW OF GALLERY----------------------- //
-            <Modal style={{ display: 'flex', flexDirection: 'row' }} onRequestClose={() => setModalVisible(false)}>
+            <Modal onRequestClose={() => setModalVisible(false)}>
+            <GradientBackground>    
               <Pressable onPress={() => setModalVisible(false)}>
                 <Image source={{ uri: plant.images[currentModalImage] }} style={[styles.galleryImage, { margin: 2, width: '99%' }]} />
               </Pressable>
-              <Pressable style={styles.button} onPress={() => {setCurrentModalImage((currentModalImage-1) % plant.images.length)}}>
+              {/* <Pressable style={styles.button} onPress={() => {setCurrentModalImage((currentModalImage-1) % plant.images.length)}}>
                 <Text>Previous</Text>
-                </Pressable>
-              <Pressable style={styles.button} onPress={() => {setCurrentModalImage((currentModalImage+1) % plant.images.length)}}>
+                </Pressable> */}
+              <Pressable style={styles.confirmationButton} onPress={() => {setCurrentModalImage((currentModalImage+1) % plant.images.length)}}>
                 <Text>Next</Text>
                 </Pressable>
+                </GradientBackground>
             </Modal>
           ) : (
             /* ---------------IMAGE CARD VIEW OF GALLERY----------------------- */
             plant.images.map((image, index) => (
               <>
-                <Pressable key={image} onPress={() => { setModalVisible(true), setCurrentModalImage(index) }}>
+                <Pressable key={index} onPress={() => { setModalVisible(true), setCurrentModalImage(index) }}>
                   <Image source={{ uri: image }} style={[styles.galleryImage, { width: 125 }]} />
                 </Pressable>
               </>
             ))
           )}
         </View>
-      </ScrollView>
-    </View>
+
+    </ScrollView>
+    </GradientBackground>
   )
 };
 
@@ -94,4 +97,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     marginVertical: 10,
   },
+  confirmationButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
+    left: "20%",
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    width: 200,
+    height: 40,
+    paddingBottom: 10,
+    paddingTop: 7,
+    borderWidth: 1,
+    borderRadius: 6,
+  }
 });
