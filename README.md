@@ -19,7 +19,7 @@ To run PlantPal locally on your machine, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/plantpal.git
+   git clone https://github.com/lvl7wizard/plantpal.git
 2. Navigate to the project directory:
     ```bash
     cd plantpal
