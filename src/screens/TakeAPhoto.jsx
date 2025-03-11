@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,62 +7,73 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { Camera } from "expo-camera";
+import { Camera } from "expo-camera"; // Use Camera instead of CameraView
 import GradientBackground from "../Components/GradientBackround";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
+
 export default function TakeAPhoto({ navigation, route }) {
-  const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  const [camera, setCamera] = useState(null);
+  const [facing, setFacing] = useState(Camera.Constants.Type.back); // ✅ Use Camera.Constants.Type.back
   const [isTakingPicture, setIsTakingPicture] = useState(false);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const cameraRef = useRef(null); // ✅ Create a reference for the camera
 
-  useEffect(() => {
-    const getCameraPermission = async () => {
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === "granted");
-    };
-    getCameraPermission();
-  }, []);
-
-  const takePicture = async () => {
-    if (camera) {
-      setIsTakingPicture(true);
-      const options = { quality: 0.2 };
-      const data = await camera.takePictureAsync(options)
-      navigation.navigate(route.params.afterPhotoTaken, { image: data.uri, imageChoice:route.params.imageChoice });
-    }
-  }
-
-  if (hasCameraPermission === null) {
+  if (!permission) {
     return <View />;
   }
-  if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
+        <TouchableOpacity onPress={requestPermission} style={styles.permissionButton}>
+          <Text style={styles.permissionText}>Grant Permission</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
+
+  const takePicture = async () => {
+    if (!cameraRef.current) return;
+    setIsTakingPicture(true);
+    try {
+      const photo = await cameraRef.current.takePictureAsync(); // ✅ Capture photo
+
+      navigation.navigate(route.params.afterPhotoTaken, {
+        image: photo.uri,
+        imageChoice: route.params.imageChoice,
+      });
+    } catch (error) {
+      console.error("Error taking picture:", error);
+    }
+    setIsTakingPicture(false);
+  };
 
   return (
     <GradientBackground>
       <Camera
+        ref={cameraRef} // ✅ Assign ref to Camera
         style={styles.camera}
-        type={Camera.Constants.Type.back}
-        ratio="1:1"
-        ref={(ref) => setCamera(ref)}
+        type={facing} // ✅ Correct usage
+      />
+      <TouchableOpacity
+        style={styles.takePictureButton}
+        onPress={takePicture} // ✅ Calls the capture function
+        disabled={isTakingPicture}
       >
-      </Camera>
-        <TouchableOpacity
-          style={styles.takePictureButton}
-          onPress={() => takePicture()}
-          disabled={isTakingPicture}
-        >
-          {isTakingPicture ? (
-            <>
-              <ActivityIndicator color="#fff" size={90}/>
-            </>
-            
-          ) : (
-                <FontAwesomeIcon icon={faCircle} color="#8a9a99" size={90} style={{alignSelf: "center"}} />
-          )}
-        </TouchableOpacity>
+        {isTakingPicture ? (
+          <ActivityIndicator color="#fff" size={90} />
+        ) : (
+          <FontAwesomeIcon
+            icon={faCircle}
+            color="#8a9a99"
+            size={90}
+            style={{ alignSelf: "center" }}
+          />
+        )}
+      </TouchableOpacity>
     </GradientBackground>
   );
 }
@@ -80,5 +91,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignSelf: "center",
     marginTop: 20,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  permissionButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "#3498db",
+    borderRadius: 5,
+  },
+  permissionText: {
+    color: "white",
+    fontSize: 16,
   },
 });

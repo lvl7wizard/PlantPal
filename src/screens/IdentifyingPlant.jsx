@@ -1,14 +1,14 @@
-import { View, Text, Pressable, Image,StyleSheet, ScrollView, ProgressBar } from "react-native";
+import { View, Text, Pressable, Image, StyleSheet, ScrollView, ProgressBar } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import Loading from '../Components/Loading';
-import {identifyPlant} from '../utils/plantIdApi';
+import { identifyPlant } from '../utils/plantIdApi';
 import GradientBackground from "../Components/GradientBackround.jsx";
 
 
 
-export default function IdentifyingPlant({navigation}) {
+export default function IdentifyingPlant({ navigation }) {
   const route = useRoute()
   const [isLoading, setIsLoading] = useState(true);
   // const [identification, setIdentification] = useState(null)
@@ -16,80 +16,80 @@ export default function IdentifyingPlant({navigation}) {
   const [selection, setSelection] = useState(null)
   const image = route.params.image
 
-    useEffect(() => {
-      FileSystem.readAsStringAsync(image, {
-        encoding: 'base64',
-      })
+  useEffect(() => {
+    FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    })
       .then((base64Image) => {
         identifyPlant(base64Image)
-        .then((response) => {
-          if (!response.result) {
-            throw new Error("error identifying plant")
-          }
-          setPredictionList(response.result.classification.suggestions)
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          setIsLoading(false)
-          navigation.navigate("AddAPlant")
-          console.error(error);
-        });
+          .then((response) => {
+            if (!response.result) {
+              throw new Error("error identifying plant")
+            }
+            setPredictionList(response.result.classification.suggestions)
+            setIsLoading(false)
+          })
+          .catch((error) => {
+            setIsLoading(false)
+            navigation.navigate("AddAPlant")
+            console.error(error);
+          });
 
-        })
-  },[])           
+      })
+  }, [])
 
-    
-    if (isLoading) {
-      return <Loading />;
-    }
-   
-      
-    return ( 
-      <GradientBackground>
-        {isLoading ? 
-          <Loading />
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+
+  return (
+    <GradientBackground>
+      {isLoading ?
+        <Loading />
         :
         <>
-        <ScrollView style={{display: "flex"}}>
-          <View style={styles.main}>
-          {predictionList.map((prediction,index) => {
-            const slug = prediction.name.toLowerCase().split(" ").join("-")
-            return (
-              <Pressable 
-              style={[styles.plantContainer, selection === prediction ? {backgroundColor: "rgba(255, 255, 255, 0.2)"} : {backgroundColor: "rgba(10, 10, 10, 0.1)"}]}
-              key={index}
-              onPress={() => selection !== prediction ? setSelection(prediction) : setSelection(null)}>
-                <View style={styles.imageContainer}>
-                  <Image
-                      source={{ uri: prediction.similar_images[0].url }}
-                      style={styles.plantImage}
-                    />
-                </View>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.text}>Species: {prediction.name}</Text>
-                  <Text style={styles.text}>Probability: {Math.round(prediction.probability*100)}%</Text>
-                </View>    
-                <Pressable style={styles.button} onPress={() => selection !== prediction ? setSelection(prediction) : setSelection(null)}>
-                  <Text>Select</Text>
-                </Pressable>
-              </Pressable>          
-            )
-          })}
-          </View>
-        </ScrollView>
+          <ScrollView style={{ display: "flex" }}>
+            <View style={styles.main}>
+              {predictionList.map((prediction, index) => {
+                const slug = prediction.name.toLowerCase().split(" ").join("-")
+                return (
+                  <Pressable
+                    style={[styles.plantContainer, selection === prediction ? { backgroundColor: "rgba(255, 255, 255, 0.2)" } : { backgroundColor: "rgba(10, 10, 10, 0.1)" }]}
+                    key={index}
+                    onPress={() => selection !== prediction ? setSelection(prediction) : setSelection(null)}>
+                    <View style={styles.imageContainer}>
+                      <Image
+                        source={{ uri: prediction.similar_images[0].url }}
+                        style={styles.plantImage}
+                      />
+                    </View>
+                    <View style={styles.detailsContainer}>
+                      <Text style={styles.text}>Species: {prediction.name}</Text>
+                      <Text style={styles.text}>Probability: {Math.round(prediction.probability * 100)}%</Text>
+                    </View>
+                    <Pressable style={styles.button} onPress={() => selection !== prediction ? setSelection(prediction) : setSelection(null)}>
+                      <Text>Select</Text>
+                    </Pressable>
+                  </Pressable>
+                )
+              })}
+            </View>
+          </ScrollView>
 
-        <View style={{display: "flex", flexDirection: "row", justifyContent:"center",}}>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", }}>
             <Pressable style={[styles.cancelButton]} onPress={() => navigation.navigate("Selector")} >
-              <Text style={[styles.text, {color: "white"}]}> Cancel </Text>
+              <Text style={[styles.text, { color: "white" }]}> Cancel </Text>
             </Pressable>
-            <Pressable style={[styles.confirmationButton]} onPress={selection ? () => navigation.navigate("AddPlant", {image:image, prediction: selection, slug:selection.name.toLowerCase().split(" ").join("-")}) : null} >
-              <Text style={[styles.text, {color: "black"}]}> Confirm </Text>
+            <Pressable style={[styles.confirmationButton]} onPress={selection ? () => navigation.navigate("AddPlant", { image: image, prediction: selection, slug: selection.name.toLowerCase().split(" ").join("-") }) : null} >
+              <Text style={[styles.text, { color: "black" }]}> Confirm </Text>
             </Pressable>
           </View>
         </>
-        }
-        </GradientBackground>
-    )
+      }
+    </GradientBackground>
+  )
 }
 const styles = StyleSheet.create({
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
   },
-  
+
   plantContainer: {
     display: "flex",
     flexDirection: "row",
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     display: "flex",
-    justifyContent:"center",
+    justifyContent: "center",
     alignItems: "center"
   },
 
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontSize:13,
+    fontSize: 13,
     fontFamily: 'sans-serif',
   },
   container: {
